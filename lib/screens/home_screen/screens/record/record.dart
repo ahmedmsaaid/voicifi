@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../../cubits/data_cubit/date_cubit.dart';
 
 class Record extends StatelessWidget {
   const Record({super.key});
@@ -56,11 +60,19 @@ class Record extends StatelessWidget {
           SizedBox(
             height: 25.h,
           ),
-          _circle(),
+          BlocBuilder<DataCubit, DataState>(
+            builder: (context, state) {
+              return _circle(context);
+            },
+          ),
           SizedBox(
             height: 50.h,
           ),
-          _mic(),
+          BlocBuilder<DataCubit, DataState>(
+            builder: (context, state) {
+              return _mic(context);
+            },
+          ),
           SizedBox(
             height: 50.h,
           ),
@@ -91,7 +103,7 @@ class circule extends CustomPainter {
   }
 }
 
-Widget _circle() {
+Widget _circle(context) {
   return Stack(
     alignment: Alignment.center,
     children: [
@@ -101,17 +113,25 @@ Widget _circle() {
         child: CustomPaint(
           child: Align(
             alignment: Alignment.center,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.multitrack_audio,
-                    size: 40, color: Color(0xFF542FB8)),
-                Icon(Icons.multitrack_audio_sharp,
-                    size: 60, color: Color(0xFF542FB8)),
-                Icon(Icons.multitrack_audio_sharp,
-                    size: 40, color: Color(0xFF542FB8)),
-              ],
+            child: Visibility(
+              replacement: Lottie.asset(
+                  "assets/lotte_files/AnimationRecording.json",
+                  fit: BoxFit.fitWidth,
+                  width: 200,
+                  alignment: Alignment.centerLeft),
+              visible: DataCubit.get(context).isRecording,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.multitrack_audio,
+                      size: 40, color: Color(0xFF542FB8)),
+                  Icon(Icons.multitrack_audio_sharp,
+                      size: 60, color: Color(0xFF542FB8)),
+                  Icon(Icons.multitrack_audio_sharp,
+                      size: 40, color: Color(0xFF542FB8)),
+                ],
+              ),
             ),
           ),
           painter: circule(),
@@ -121,7 +141,7 @@ Widget _circle() {
   );
 }
 
-Widget _mic() {
+Widget _mic(context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -131,11 +151,25 @@ Widget _mic() {
         color: Colors.grey,
       ),
       IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.mic,
-            size: 40,
-            color: Color(0xFF5435CF),
+          onPressed: () {
+            DataCubit.get(context).startRecording();
+          },
+          icon: Visibility(
+            visible: DataCubit.get(context).isRecording,
+            replacement: InkWell(
+              onTap: () {
+                DataCubit.get(context).startRecording();
+              },
+              child: Lottie.asset("assets/lotte_files/stopRecording.json",
+                  fit: BoxFit.fitWidth,
+                  width: 50,
+                  alignment: Alignment.centerLeft),
+            ),
+            child: Icon(
+              Icons.mic,
+              size: 40,
+              color: Color(0xFF5435CF),
+            ),
           )),
       Icon(
         Icons.skip_next_outlined,

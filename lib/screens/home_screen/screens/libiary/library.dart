@@ -3,14 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voicify/cubits/home_cubit/home_cubit.dart';
 
+import '../../../../widgets/text_box/text_box.dart';
+
 class Library extends StatelessWidget {
   const Library({super.key});
 
   @override
   Widget build(BuildContext context) {
     var cubit = HomeCubit.get(context);
-    // var listItems = cubit.listItems;
-
+    var listItems = HomeCubit.get(context).height(cubit.l.length).h;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -43,16 +44,18 @@ class Library extends StatelessWidget {
         ),
         body: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.transparent,
-              automaticallyImplyLeading: false,
-              expandedHeight: HomeCubit.get(context).height(cubit.l.length).h,
-              // تغيير الارتفاع بناءً على عدد العناصر
-              floating: false,
-              flexibleSpace: FlexibleSpaceBar(
-                background: BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    return Column(
+            BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (previous, current) {
+                return current != previous;
+              },
+              builder: (context, state) {
+                return SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                  expandedHeight: listItems,
+                  floating: false,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -67,25 +70,28 @@ class Library extends StatelessWidget {
                           child: RefreshIndicator(
                             onRefresh: () async {
                               cubit.l.add(1);
+                              cubit.height(cubit.l.length);
 
+                              // cubit.l.clear();
+                              //
                               print(cubit.l.length);
                             },
                             child: ListView.separated(
                               itemBuilder: (context, index) {
-                                return _item();
+                                return _item(context: context);
                               },
-                              itemCount: cubit.l.length,
-                              // استخدام طول القائمة هنا
+                              itemCount:
+                                  cubit.l.length <= 3 ? cubit.l.length : 3,
                               separatorBuilder: (context, index) =>
                                   SizedBox(height: 10),
                             ),
                           ),
                         ),
                       ],
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -101,7 +107,7 @@ class Library extends StatelessWidget {
                 (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: _item(),
+                    child: _item(context: context),
                   );
                 },
                 childCount: 10,
@@ -114,13 +120,15 @@ class Library extends StatelessWidget {
   }
 }
 
-Widget _item({BuildContext? context}) {
+Widget _item({required BuildContext context}) {
   return Material(
     color: Colors.transparent,
     borderRadius: BorderRadius.circular(12),
     child: InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () {},
+      onTap: () {
+        DialogBox.scribe(context);
+      },
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(

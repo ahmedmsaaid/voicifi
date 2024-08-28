@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:voicify/models/colors/app_colors.dart';
 import 'package:voicify/screens/home_screen/screens/home/home.dart';
 import 'package:voicify/screens/home_screen/screens/libiary/library.dart';
 import 'package:voicify/screens/home_screen/screens/record/record.dart';
@@ -25,11 +26,11 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
-          backgroundColor: Color(0xFF6a1b9a),
+          backgroundColor: AppColors.purple,
           body: screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: cubit.currentIndex,
-            selectedItemColor: Color(0xFF5435CF),
+            selectedItemColor: AppColors.blue,
             selectedFontSize: 14,
             unselectedFontSize: 12,
             showUnselectedLabels: true,
