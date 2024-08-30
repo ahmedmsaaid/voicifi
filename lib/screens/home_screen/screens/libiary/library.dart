@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:voicify/cubits/data_cubit/date_cubit.dart';
 import 'package:voicify/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/models/item_model/item_model.dart';
 
 import '../../../../widgets/text_box/text_box.dart';
 
@@ -11,7 +13,8 @@ class Library extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = HomeCubit.get(context);
-    var listItems = HomeCubit.get(context).height(cubit.l.length).h;
+    var cubit2 = DataCubit.get(context);
+    var listItems = HomeCubit.get(context).height(cubit2.savedItems.length).h;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -78,10 +81,14 @@ class Library extends StatelessWidget {
                             },
                             child: ListView.separated(
                               itemBuilder: (context, index) {
-                                return _item(context: context);
+                                return _item(
+                                    index: index,
+                                    context: context,
+                                    model: cubit2.savedItems[index]);
                               },
-                              itemCount:
-                                  cubit.l.length <= 3 ? cubit.l.length : 3,
+                              itemCount: cubit2.savedItems.length <= 3
+                                  ? cubit2.savedItems.length
+                                  : 3,
                               separatorBuilder: (context, index) =>
                                   SizedBox(height: 10),
                             ),
@@ -105,12 +112,12 @@ class Library extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _item(context: context),
-                  );
+                  return _item(
+                      context: context,
+                      model: cubit2.savedItems[index],
+                      index: index);
                 },
-                childCount: 10,
+                childCount: cubit2.savedItems.length,
               ),
             ),
           ],
@@ -120,59 +127,65 @@ class Library extends StatelessWidget {
   }
 }
 
-Widget _item({required BuildContext context}) {
+Widget _item(
+    {required BuildContext context,
+    required ItemModel model,
+    required int index}) {
   return Material(
     color: Colors.transparent,
     borderRadius: BorderRadius.circular(12),
     child: InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
-        DialogBox.scribe(context);
+        DialogBox.showScribe(context, index);
       },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Color(0xFF6a1b9a)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'app_time_stats: avg=26781.04ms',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'App Time',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-            Expanded(child: SizedBox()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.remove_red_eye_outlined,
-                    color: Color(0xFF542FB8),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Color(0xFF6a1b9a)),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    model.title ?? '',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.delete_outline_rounded,
-                    color: Color(0xFF542FB8),
+                  SizedBox(height: 5),
+                  Text(
+                    model.date ?? '',
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Expanded(child: SizedBox()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: Color(0xFF542FB8),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.delete_outline_rounded,
+                      color: Color(0xFF542FB8),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ),

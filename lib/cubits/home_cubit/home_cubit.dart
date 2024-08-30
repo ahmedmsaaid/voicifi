@@ -10,7 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   static HomeCubit get(context) => BlocProvider.of<HomeCubit>(context);
   TextEditingController scribe = TextEditingController();
-  TextEditingController titleController = TextEditingController();
+
   int currentIndex = 0;
 
   bool edit = false;
@@ -18,8 +18,6 @@ class HomeCubit extends Cubit<HomeState> {
   // int listItems = 1;
   List<int> l = [1, 2];
   late double h;
-  String scribeContent =
-      'Hier dreht sich alles um die Kunst und Kreativität von Barbara Meier, auch bekannt als Bara. Lassen Sie sich inspirieren von ihren einzigartigen Werken und erfahren Sie mehr über ihre Leidenschaft für Malerei, Grafikdesign und Drahtfiguren. Tauchen Sie ein in die faszinierende Welt der Wasserwelten und entdecken Sie, wie Barbara Meier Ideen auf den Punkt bringt. Besuchen Sie ihr Atelier für Malworkshops und lernen Sie selbst, die Farben zum Leben zu erwecken. Lassen Sie sich von der Kreativität begeistern!';
   String title = 'Title';
 
   Future<void> navBar(index) async {
@@ -38,21 +36,17 @@ class HomeCubit extends Cubit<HomeState> {
     emit(Refrish());
     switch (listItems) {
       case 1:
-        h = 100.0;
+        h = 110.0;
       case 2:
-        h = 160.0;
+        h = 170.0;
       case 3:
-        h = 230.0;
+        h = 150.0;
     }
     height = h;
     emit(ExpandSliverBar());
     return height;
   }
 
-  void showScribe() {
-    scribe.text = scribeContent;
-    emit(Scribe());
-  }
 // void refresh(int index) {
 //   listItems = index;
 //   emit(Refrish());

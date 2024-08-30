@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
               create: (context) => HomeCubit(),
             ),
             BlocProvider(
-              create: (context) => DataCubit(),
+              create: (context) => DataCubit()..initSpeech(),
             ),
           ],
           child: MaterialApp(
