@@ -9,15 +9,14 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
   static HomeCubit get(context) => BlocProvider.of<HomeCubit>(context);
-  TextEditingController scribe = TextEditingController();
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   bool edit = false;
 
   // int listItems = 1;
   List<int> l = [1, 2];
-  late double h;
+  double h = 50;
   String title = 'Title';
 
   Future<void> navBar(index) async {

@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voicify/models/item_model/item_model.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 part 'date_state.dart';
 
@@ -28,20 +34,33 @@ class DataCubit extends Cubit<DataState> {
   //Buttons
   void save() {
     final String time = '${now.hour - 12}-${now.minute.toString()}';
+    content = content + scribe.text;
     ItemModel model = ItemModel(
-        date: time,
-        title: titleController.text,
-        index: 0,
-        content: items.last.content ?? '');
+        date: time, title: titleController.text, index: 0, content: content);
     savedItems.add(model);
-    scribe.clear();
-    titleController.clear();
 
+    titleController.clear();
+    clear();
+    print(content);
     emit(StartRecording());
   }
 
+  void clear() {
+    items.clear();
+    emit(Cleared());
+  }
+
+  void remove(int index) {
+    emit(Remove());
+    savedItems.removeAt(index);
+    for (int i = 0; i < savedItems.length; i++) {
+      savedItems[i].index != i;
+    }
+    emit(Removed());
+  }
+
   void showScribe() {
-    scribe.text = items.last.content ?? '';
+    scribe.text = items.last.content!;
 
     emit(Scribe());
   }
@@ -116,24 +135,23 @@ class DataCubit extends Cubit<DataState> {
   }
 
   void onSpeechResult(SpeechRecognitionResult result) async {
+    final String time = '${now.hour - 12}-${now.minute.toString()}';
     if (speechToText.isListening) {
-      final String time = '${now.hour - 12}-${now.minute.toString()}';
-
-      ItemModel model = ItemModel(content: result.recognizedWords, date: time);
       content = result.recognizedWords;
 
-      items.add(model);
-      print("length of items is ${items.length}");
-
-      emit(SpeechResult());
-
-      print('speech********${model.content}');
-      print('date********${model.date}');
       print(state);
     } else {
       of();
       print(TimeOut());
     }
+
+    ItemModel model =
+        ItemModel(content: content, date: time, title: '', index: 0);
+    items.add(model);
+    print("length of items is ${items.length}");
+    print('speech********${model.content}');
+    print('date********${model.date}');
+    emit(SpeechResult());
   }
 
   void on() {
@@ -144,6 +162,40 @@ class DataCubit extends Cubit<DataState> {
   void of() {
     isListening = false;
     emit(Of());
+  }
+
+  Future<void> requestPermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+  }
+
+  Future<void> download(String text) async {
+    requestPermission();
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Text(text),
+          ); // Center
+        },
+      ),
+    );
+
+    // الحصول على مسار التخزين
+    final customPath = 'cache/pdf';
+    final file = File(customPath);
+
+    // حفظ المستند
+    await file.writeAsBytes(await pdf.save());
+
+    // طباعة النص في وحدة التحكم
+    print("Text to be printed in PDF: $text");
+
+    emit(Downloaded());
+    print("PDF saved at: ${file.path}");
   }
 // Future<void> speechEnabled() {}
 }

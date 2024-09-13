@@ -26,3 +26,11 @@ final class Of extends DataState {}
 final class LangChanged extends DataState {}
 
 final class Scribe extends DataState {}
+
+final class Removed extends DataState {}
+
+final class Remove extends DataState {}
+
+final class Cleared extends DataState {}
+
+final class Downloaded extends DataState {}
