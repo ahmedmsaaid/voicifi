@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:voicify/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

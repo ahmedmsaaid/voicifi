@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:voicify/widgets/delete/delete.dart';
 import 'package:voicify/widgets/save_record/save_record.dart';
 
-import '../../../../cubits/data_cubit/date_cubit.dart';
+import '../../../../data/cubits/data_cubit/date_cubit.dart';
 import '../../../../models/colors/app_colors.dart';
 
 class Record extends StatelessWidget {
@@ -93,7 +93,7 @@ class Record extends StatelessWidget {
                 },
                 icon: Icon(
                   Icons.delete_outline_outlined,
-                  size: 30,
+                  size: 30.r,
                   color: Colors.red,
                 ),
               ),
@@ -152,7 +152,7 @@ Widget _circle(context) {
                 child: Lottie.asset(
                     "assets/lotte_files/AnimationRecording.json",
                     fit: BoxFit.fitWidth,
-                    width: 200,
+                    width: 200.w,
                     alignment: Alignment.centerLeft)),
           ),
           painter: circule(),
@@ -256,7 +256,7 @@ Widget _buttons(context) {
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(
-                    width: 15,
+                    width: 15.w,
                   ),
                   Icon(Icons.arrow_circle_right_outlined, color: Colors.white)
                 ],
@@ -286,8 +286,8 @@ Widget _buttons(context) {
                     'Lang',
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(
-                    width: 15,
+                  Expanded(
+                    child: SizedBox(),
                   ),
                   Container(
                     child: DropdownButton<String>(
