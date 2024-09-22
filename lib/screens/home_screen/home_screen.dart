@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voicify/models/colors/app_colors.dart';
-import 'package:voicify/screens/home_screen/screens/home/home.dart';
-import 'package:voicify/screens/home_screen/screens/libiary/library.dart';
-import 'package:voicify/screens/home_screen/screens/record/record.dart';
-import 'package:voicify/screens/home_screen/screens/settings/settings.dart';
-import 'package:voicify/screens/home_screen/screens/upload/upload.dart';
+import 'package:voicify/screens/home_screen/home/home.dart';
+import 'package:voicify/screens/home_screen/libiary/library.dart';
+import 'package:voicify/screens/home_screen/record/record.dart';
+import 'package:voicify/screens/home_screen/settings/settings.dart';
+import 'package:voicify/screens/home_screen/upload/upload.dart';
 
-import '../../cubits/home_cubit/home_cubit.dart';
+import '../../data/cubits/home_cubit/home_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,11 +16,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      Home(),
-      Record(),
-      Library(),
-      Upload(),
-      Settings(),
+      const Home(),
+      const Record(),
+      Library(
+          height: HomeCubit.get(context)
+              .height(HomeCubit.get(context).savedItems.length)
+              .h),
+      const Upload(),
+      const Settings(),
     ];
 
     return BlocBuilder<HomeCubit, HomeState>(
@@ -38,23 +42,23 @@ class HomeScreen extends StatelessWidget {
               cubit.navBar(index);
             },
             items: [
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                   icon: Icon(Icons.home),
                   label: 'Home',
                   backgroundColor: Colors.transparent),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.mic),
+              const BottomNavigationBarItem(
+                  icon: const Icon(Icons.mic),
                   label: 'Record',
                   backgroundColor: Colors.transparent),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                   icon: Icon(Icons.my_library_music),
-                  label: 'Libiary',
+                  label: 'Library',
                   backgroundColor: Colors.transparent),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                   icon: Icon(Icons.upload),
                   label: 'Upload',
                   backgroundColor: Colors.transparent),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
                   label: 'Settings',
                   backgroundColor: Colors.transparent),

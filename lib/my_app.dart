@@ -1,9 +1,14 @@
+import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:voicify/cubits/data_cubit/date_cubit.dart';
-import 'package:voicify/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/data/core/api/dio_consumer.dart';
+import 'package:voicify/data/cubits/api_cubit/api_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
 import 'package:voicify/screens/on_boarding/on_boarding.dart';
+
+import 'data/cubits/home_cubit/home_cubit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,11 +27,22 @@ class MyApp extends StatelessWidget {
               create: (context) => HomeCubit(),
             ),
             BlocProvider(
-              create: (context) => DataCubit()..initSpeech(),
+              create: (context) => DataCubit(
+                DioConsumer(dio: Dio()),
+              )..initSpeech(),
+            ),
+            BlocProvider(
+              create: (context) => ApiCubit(
+                DioConsumer(dio: Dio()),
+              ),
             ),
           ],
           child: MaterialApp(
+            // showSemanticsDebugger: true,
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
             title: 'First Method',
             // You can use the library anywhere in the app even in theme
             theme: ThemeData(

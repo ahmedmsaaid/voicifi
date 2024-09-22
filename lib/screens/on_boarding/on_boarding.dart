@@ -11,7 +11,6 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SafeArea(
         child: Column(
           children: [
@@ -23,10 +22,11 @@ class OnBoardingScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Stack(
                 children: [
                   Container(
+                    padding: EdgeInsets.zero,
                     width: double.infinity,
                     height: double.infinity,
                     decoration: BoxDecoration(
@@ -39,22 +39,26 @@ class OnBoardingScreen extends StatelessWidget {
                         end: Alignment.bottomLeft,
                       ),
                     ),
-                    child: texts(context),
+                    child: texts(context), // تأكد من أن هذه الدالة موجودة
                   ),
-                  ClipPath(
-                    clipper: ContanerWithCircle(),
-                    child: Container(
-                      height: 80.h,
-                      width: double.infinity,
-                      color: Theme.of(context).cardColor ,
-
-
+                  Positioned(
+                    top: -1,
+                    child: ClipPath(
+                      clipper: ContanerWithCircle(),
+                      // تأكد من أن هذا الكلاسر موجود
+                      child: Container(
+                        padding: EdgeInsets.zero,
+                        height: 80, // استخدم قيمة ثابتة بدلاً من 80.h
+                        width: MediaQuery.of(context)
+                            .size
+                            .width, // استخدم عرض الشاشة
+                        color: Theme.of(context).cardColor,
+                      ),
                     ),
                   ),
-
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -95,7 +99,7 @@ Widget texts(BuildContext context) {
         height: 20.h,
       ),
       Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Text(
           'Development of an offline-first mobile snagging application for Disneyland Paris, streamlining information gathering for technical experts in the field and enhancing communication with maintenance services for problem-solving.',
           overflow: TextOverflow.clip,
@@ -108,7 +112,9 @@ Widget texts(BuildContext context) {
           ),
         ),
       ),
-      SizedBox(height: 60.h,),
+      SizedBox(
+        height: 60.h,
+      ),
       SizedBox(
         width: 220.w,
         height: 30.h,
@@ -118,7 +124,11 @@ Widget texts(BuildContext context) {
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: Colors.deepPurpleAccent),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -126,10 +136,7 @@ Widget texts(BuildContext context) {
                 Text(
                   'Get Start',
                   style: GoogleFonts.abel(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.sp
-                    ),
+                    textStyle: TextStyle(color: Colors.white, fontSize: 20.sp),
                   ),
                 ),
                 Icon(Icons.arrow_forward_rounded, color: Colors.white)
@@ -142,12 +149,13 @@ Widget texts(BuildContext context) {
 
 class ContanerWithCircle extends CustomClipper<Path> {
   var path = Path();
+
   @override
   Path getClip(Size size) {
     double w = size.width;
     double h = size.height;
     path.lineTo(0, size.height);
-    path.quadraticBezierTo(w * 0.5, h -150, w, h);
+    path.quadraticBezierTo(w * 0.5, h - 150, w, h);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0);
 

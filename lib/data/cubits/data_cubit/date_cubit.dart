@@ -1,27 +1,35 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:voicify/data/cache/cache_helper.dart';
 import 'package:voicify/models/item_model/item_model.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:path/path.dart' as p;
+import '../../core/api/api_consumer.dart';
+import '../home_cubit/home_cubit.dart';
 
 part 'date_state.dart';
 
 class DataCubit extends Cubit<DataState> {
-  DataCubit() : super(DateInitial());
+  DataCubit(
+    this.api,
+  ) : super(DateInitial());
+  final home = HomeCubit();
   TextEditingController titleController = TextEditingController();
   TextEditingController scribe = TextEditingController();
-  List<ItemModel> items = [];
-  List<ItemModel> savedItems = [];
-  String content = 'ahmed';
+
+  String content = '';
   DateTime now = DateTime.now();
+  final myData = SharedHelper.getData('myData');
 
   static DataCubit get(context) => BlocProvider.of<DataCubit>(context);
   bool isRecording = false;
@@ -30,37 +38,12 @@ class DataCubit extends Cubit<DataState> {
   bool speechEnabled = false;
   bool isListening = false;
   String scribeContent = '';
+  final ApiConsumer api;
 
   //Buttons
-  void save() {
-    final String time = '${now.hour - 12}-${now.minute.toString()}';
-    content = content + scribe.text;
-    ItemModel model = ItemModel(
-        date: time, title: titleController.text, index: 0, content: content);
-    savedItems.add(model);
-
-    titleController.clear();
-    clear();
-    print(content);
-    emit(StartRecording());
-  }
-
-  void clear() {
-    items.clear();
-    emit(Cleared());
-  }
-
-  void remove(int index) {
-    emit(Remove());
-    savedItems.removeAt(index);
-    for (int i = 0; i < savedItems.length; i++) {
-      savedItems[i].index != i;
-    }
-    emit(Removed());
-  }
 
   void showScribe() {
-    scribe.text = items.last.content!;
+    scribe.text = home.items.last.content!;
 
     emit(Scribe());
   }
@@ -115,11 +98,13 @@ class DataCubit extends Cubit<DataState> {
         partialResults: true,
       );
       await speechToText.listen(
-          onResult: onSpeechResult,
-          localeId: localeId,
-          listenFor: Duration(minutes: 10),
-          pauseFor: Duration(seconds: 5),
-          listenOptions: options);
+        onResult: onSpeechResult,
+        localeId: localeId,
+        listenFor: Duration(minutes: 10),
+        pauseFor: Duration(seconds: 5),
+        listenOptions: options,
+      );
+
       print('Started listening');
       emit(StartListening());
     } catch (e) {
@@ -135,7 +120,6 @@ class DataCubit extends Cubit<DataState> {
   }
 
   void onSpeechResult(SpeechRecognitionResult result) async {
-    final String time = '${now.hour - 12}-${now.minute.toString()}';
     if (speechToText.isListening) {
       content = result.recognizedWords;
 
@@ -146,11 +130,12 @@ class DataCubit extends Cubit<DataState> {
     }
 
     ItemModel model =
-        ItemModel(content: content, date: time, title: '', index: 0);
-    items.add(model);
-    print("length of items is ${items.length}");
+        ItemModel(content: content, recordedTime: now, title: '', index: 0);
+    home.items.add(model);
+
+    print("length of items is ${home.items.length}");
     print('speech********${model.content}');
-    print('date********${model.date}');
+    print('date********${model.recordedTime}');
     emit(SpeechResult());
   }
 
@@ -164,38 +149,113 @@ class DataCubit extends Cubit<DataState> {
     emit(Of());
   }
 
-  Future<void> requestPermission() async {
+  Future<void> requestStoragePermission() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
     }
   }
 
-  Future<void> download(String text) async {
-    requestPermission();
+  String downloadPath = '';
+
+  String getTextDirection(String text) {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text) ? 'rtl' : 'ltr';
+  }
+
+  Future<void> download(String text, String title) async {
+    final fontData = await rootBundle.load(
+        'assets/fonts/ar/Amiri-Regular.ttf'); // استبدل المسار إذا لزم الأمر
+    final ttf = pw.Font.ttf(fontData);
+    await requestStoragePermission();
+
+    //create pdf file
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          final direction = getTextDirection(text);
+          return pw.Center(
+            child: pw.Text(
+              text,
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 24,
+              ),
+              textDirection: direction == 'rtl'
+                  ? pw.TextDirection.rtl
+                  : pw.TextDirection.ltr,
+            ),
+          );
+        },
+      ),
+    );
+
+    // Get the path to the downloads folder
+    final downloadsDirectory = await getExternalStorageDirectory();
+    final customPath = p.join(downloadsDirectory!.path, '$title.pdf');
+    final file = File(customPath);
+
+    try {
+      // Save the PDF file
+      await file.writeAsBytes(await pdf.save());
+      print("تم حفظ PDF في: ${file.path}");
+      downloadPath = "تم حفظ PDF في:${file.path}";
+    } catch (e) {
+      print("خطأ في حفظ PDF في مجلد التنزيلات: $e");
+
+      // محاولة حفظ الملف في مسار آخر
+      final alternativeDirectory = await getApplicationDocumentsDirectory();
+      final alternativePath = p.join(alternativeDirectory.path, '$title.pdf');
+      final alternativeFile = File(alternativePath);
+
+      try {
+        // حفظ مستند PDF في المسار البديل
+        await alternativeFile.writeAsBytes(await pdf.save());
+        print("تم حفظ PDF في المسار البديل: ${alternativeFile.path}");
+        downloadPath = alternativeFile.path;
+      } catch (e) {
+        print("خطأ في حفظ PDF في المسار البديل: $e");
+      }
+    }
+  }
+
+  Future<void> downloadOnRoot(String text, String title) async {
+    // طلب الأذونات
+    await requestStoragePermission();
+
+    // إنشاء مستند PDF
     final pdf = pw.Document();
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
           return pw.Center(
             child: pw.Text(text),
-          ); // Center
+          );
         },
       ),
     );
 
-    // الحصول على مسار التخزين
-    final customPath = 'cache/pdf';
+// Get the path to the downloads folder
+    final downloadsDirectory = await getExternalStorageDirectory();
+    final customPath = p.join(downloadsDirectory!.path, '$title.pdf');
     final file = File(customPath);
 
-    // حفظ المستند
-    await file.writeAsBytes(await pdf.save());
-
-    // طباعة النص في وحدة التحكم
-    print("Text to be printed in PDF: $text");
-
-    emit(Downloaded());
-    print("PDF saved at: ${file.path}");
+    try {
+      // حفظ مستند PDF
+      await file.writeAsBytes(await pdf.save());
+      print("تم حفظ PDF في: ${file.path}");
+    } catch (e) {
+      print("خطأ في حفظ PDF: $e");
+    }
   }
-// Future<void> speechEnabled() {}
+
+  Future<void> share(String text) async {
+    await Clipboard.setData(ClipboardData(text: text)); // تم النسخ بنجاح
+
+    final result = await Share.share(text);
+    print(result);
+  }
 }
+
+// To save the file in the> device

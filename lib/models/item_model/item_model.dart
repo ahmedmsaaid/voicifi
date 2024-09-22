@@ -1,26 +1,32 @@
 class ItemModel {
-  late final String? title;
-  late final String? content;
-  late final String? date;
-  late final int? index;
+  final String? title;
+  final String? content;
 
-  ItemModel({this.title, this.content, this.date, this.index});
+  final int? index;
+  final DateTime? recordedTime;
+
+  ItemModel({
+    required this.title,
+    required this.content,
+    required this.index,
+    required this.recordedTime,
+  });
 
   factory ItemModel.fromJson(Map<String, dynamic> jsonData) {
     return ItemModel(
+      recordedTime: DateTime.parse(jsonData['recordedTime']),
       title: jsonData['title'],
       content: jsonData['content'],
-      date: jsonData['date'],
       index: jsonData['index'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = title;
-    data['content'] = content;
-    data['date'] = data;
-    data['index'] = index;
-    return data;
+    return {
+      'title': title,
+      'content': content,
+      'index': index,
+      'recordedTime': recordedTime!.toIso8601String()
+    };
   }
 }

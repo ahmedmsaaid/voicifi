@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:voicify/cubits/data_cubit/date_cubit.dart';
-import 'package:voicify/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/data/cubits/api_cubit/api_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
 import 'package:voicify/models/item_model/item_model.dart';
 import 'package:voicify/widgets/save_record/save_record.dart';
 
 import '../../models/colors/app_colors.dart';
+import '../snack_bar/snack_bar.dart';
 
 class DialogBox {
   static scribe(BuildContext context) {
@@ -17,7 +20,7 @@ class DialogBox {
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               var cubit = HomeCubit.get(context);
-              ItemModel model = DataCubit.get(context).items[0];
+              ItemModel model = cubit.items[0];
 
               return model.content != null
                   ? Container(
@@ -38,7 +41,7 @@ class DialogBox {
                                           },
                                           maxLines: null,
                                           decoration: InputDecoration(
-                                              hintStyle: TextStyle(
+                                              hintStyle: const TextStyle(
                                                   // fontSize: 15,
                                                   // height: 300,
                                                   color: Colors.black),
@@ -49,7 +52,7 @@ class DialogBox {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12))),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.black,
                                               // height: 30,
                                               fontSize: 14),
@@ -58,7 +61,8 @@ class DialogBox {
                                           DataCubit.get(context)
                                               .titleController
                                               .text,
-                                          style: TextStyle(color: Colors.black),
+                                          style: const TextStyle(
+                                              color: Colors.black),
                                         ),
                                 ),
                                 SizedBox(
@@ -68,6 +72,7 @@ class DialogBox {
                                   height: 300,
                                   child: cubit.edit
                                       ? TextField(
+                                          maxLength: 10,
                                           controller:
                                               DataCubit.get(context).scribe,
                                           onTap: () {
@@ -76,7 +81,7 @@ class DialogBox {
                                           },
                                           maxLines: null,
                                           decoration: InputDecoration(
-                                              hintStyle: TextStyle(
+                                              hintStyle: const TextStyle(
                                                   // fontSize: 15,
                                                   // height: 300,
                                                   color: Colors.black),
@@ -87,21 +92,22 @@ class DialogBox {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12))),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.black,
                                               // height: 30,
                                               fontSize: 14),
                                         )
                                       : Text(
-                                          DataCubit.get(context).content ?? '',
-                                          style: TextStyle(color: Colors.black),
+                                          DataCubit.get(context).content,
+                                          style: const TextStyle(
+                                              color: Colors.black),
                                         ),
                                 ),
                               ]),
                             ),
                           ),
                           Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 // border: Border.all(color: AppColors.blue),
                                 // borderRadius: BorderRadius.circular(12)
                                 ),
@@ -114,11 +120,14 @@ class DialogBox {
                                       SaveRecord.saving(context);
 
                                       Future.delayed(
-                                        Duration(seconds: 3),
+                                        const Duration(seconds: 3),
                                         () => Navigator.pop(context),
                                       ).then((_) {
                                         Navigator.pop(context);
-                                        DataCubit.get(context).save();
+                                        HomeCubit.get(context).save(
+                                            DataCubit.get(context)
+                                                .titleController,
+                                            DataCubit.get(context).scribe);
                                         DataCubit.get(context)
                                             .titleController
                                             .clear();
@@ -129,7 +138,7 @@ class DialogBox {
                                     icon: Column(
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(3),
+                                          padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
                                               // color:
                                               //     AppColors.purple.withOpacity(0.2),
@@ -140,7 +149,7 @@ class DialogBox {
                                                   BorderRadius.circular(5)),
                                           child: ImageIcon(
                                             color: AppColors.blue, size: 25,
-                                            AssetImage(
+                                            const AssetImage(
                                               'assets/icons/save3.png',
                                             ),
                                             // color: Colors.white,
@@ -149,7 +158,7 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Save',
                                           style: TextStyle(
                                               color: Colors.black,
@@ -164,7 +173,7 @@ class DialogBox {
                                     icon: Column(
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(3),
+                                          padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
                                               color: AppColors.blue,
                                               border: Border.all(
@@ -172,14 +181,15 @@ class DialogBox {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: ImageIcon(
-                                            AssetImage('assets/icons/edit.png'),
+                                            const AssetImage(
+                                                'assets/icons/edit.png'),
                                             color: AppColors.white,
                                           ),
                                         ),
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Edit',
                                           style: TextStyle(
                                               color: Colors.black,
@@ -200,7 +210,7 @@ class DialogBox {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: ImageIcon(
-                                            AssetImage(
+                                            const AssetImage(
                                                 'assets/icons/download.png'),
                                             color: AppColors.white,
                                           ),
@@ -208,7 +218,7 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Download',
                                           style: TextStyle(
                                               color: Colors.black,
@@ -221,7 +231,7 @@ class DialogBox {
                                     icon: Column(
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(3),
+                                          padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
                                               color: AppColors.blue,
                                               border: Border.all(
@@ -229,7 +239,7 @@ class DialogBox {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: ImageIcon(
-                                            AssetImage(
+                                            const AssetImage(
                                                 'assets/icons/share.png'),
                                             color: AppColors.white,
                                           ),
@@ -237,7 +247,7 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Share',
                                           style: TextStyle(
                                               color: Colors.black,
@@ -251,7 +261,7 @@ class DialogBox {
                         ],
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('Record voice first !'),
                     );
             },
@@ -268,37 +278,45 @@ class DialogBox {
         content: SingleChildScrollView(
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
-              var cubit = HomeCubit.get(context);
               var cubit2 = DataCubit.get(context);
+              var cubit = HomeCubit.get(context);
 
               return Container(
-                height: 400.h,
+                height: 420.h,
                 child: Column(
                   children: [
-                    Expanded(
-                      child: Container(
-                        child: Column(children: [
-                          Container(
-                            child: Text(
-                              cubit2.savedItems[index].title ?? '',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          Container(
-                            height: 300,
-                            child: Text(
-                              cubit2.savedItems[index].content ?? '',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ]),
+                    Column(children: [
+                      Container(
+                        child: Text(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          cubit.savedItems[index].title
+                              .toString()
+                              .split('.')
+                              .first,
+                          style: const TextStyle(color: Colors.black),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 300.h,
+                        child: SingleChildScrollView(
+                          child: Text(
+                            cubit.savedItems[index].content ?? '',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ]),
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           // border: Border.all(color: AppColors.blue),
                           // borderRadius: BorderRadius.circular(12)
                           ),
@@ -306,21 +324,31 @@ class DialogBox {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: SizedBox()),
+                          const Expanded(child: SizedBox()),
                           IconButton(
                               onPressed: () {
-                                Future.delayed(
-                                  Duration(seconds: 3),
-                                  () => Navigator.pop(context),
-                                ).then((_) {
-                                  Navigator.pop(context);
-                                  SaveRecord.done(context);
+                                // print(cubit2.savedItems[index].content);
+                                cubit2
+                                    .download(
+                                        cubit.savedItems[index].content ?? '',
+                                        cubit.savedItems[index].title ?? '')
+                                    .then((_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(cubit2.downloadPath)));
                                 });
+                                // Future.delayed(
+                                //   Duration(seconds: 3),
+                                //   () => Navigator.pop(context),
+                                // ).then((_) {
+                                //   Navigator.pop(context);
+                                //   SaveRecord.done(context);
+                                // });
                               },
                               icon: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(3),
+                                    padding: const EdgeInsets.all(3),
                                     decoration: BoxDecoration(
                                         // color:
                                         //     AppColors.purple.withOpacity(0.2),
@@ -330,7 +358,7 @@ class DialogBox {
                                         borderRadius: BorderRadius.circular(5)),
                                     child: ImageIcon(
                                       color: AppColors.blue, size: 25,
-                                      AssetImage(
+                                      const AssetImage(
                                         'assets/icons/download.png',
                                       ),
                                       // color: Colors.white,
@@ -339,7 +367,7 @@ class DialogBox {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Download',
                                     style: TextStyle(
                                         color: Colors.black,
@@ -348,25 +376,91 @@ class DialogBox {
                                 ],
                               )),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                cubit2.share(
+                                    cubit.savedItems[index].content ?? '');
+                              },
                               icon: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(3),
+                                    padding: const EdgeInsets.all(3),
                                     decoration: BoxDecoration(
                                         /* border:*/
                                         // Border.all(color: AppColors.blue),
                                         borderRadius: BorderRadius.circular(5)),
                                     child: ImageIcon(
-                                      AssetImage('assets/icons/share.png'),
+                                      const AssetImage(
+                                          'assets/icons/share.png'),
                                       color: AppColors.purple,
                                     ),
                                   ),
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Share',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                await Clipboard.setData(ClipboardData(
+                                  text: cubit.savedItems[index].content ?? '',
+                                )).then((_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: CostemSnackBar.snackBar(context),
+                                      clipBehavior: Clip.antiAlias,
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                  );
+                                });
+                              },
+                              icon: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        /* border:*/
+                                        // Border.all(color: AppColors.blue),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: const Icon(Icons.copy),
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  const Text(
+                                    'Copy',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                          IconButton(
+                              onPressed: () async {
+                                ApiCubit.get(context).convertAudioWithOpenApi(
+                                    cubit.savedItems[index].content ?? '',
+                                    cubit.savedItems[index].title ?? '');
+                              },
+                              icon: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        /* border:*/
+                                        // Border.all(color: AppColors.blue),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: const Icon(Icons.copy),
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  const Text(
+                                    'Trim',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),

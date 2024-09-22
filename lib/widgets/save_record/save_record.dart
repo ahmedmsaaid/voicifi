@@ -1,20 +1,16 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:voicify/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
 import 'package:voicify/models/colors/app_colors.dart';
-import 'package:voicify/screens/home_screen/home_screen.dart';
 
-import '../../cubits/home_cubit/home_cubit.dart';
-import '../../models/item_model/item_model.dart';
+import '../../data/cubits/home_cubit/home_cubit.dart';
 import '../text_box/text_box.dart';
 
 class SaveRecord {
-  static save(
+  static Transcript(
     BuildContext context,
   ) {
     return showDialog(
@@ -24,10 +20,18 @@ class SaveRecord {
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
               var cubit = DataCubit.get(context);
-              GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-              return DataCubit.get(context).items.isNotEmpty
+              return HomeCubit.get(context).items.isEmpty
                   ? Container(
+                      height: 100,
+                      child: Center(
+                        child: Text(
+                          'Record voice first !',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    )
+                  : Container(
                       height: 100.h,
                       child: Column(
                         children: [
@@ -154,16 +158,28 @@ class SaveRecord {
                           )
                         ],
                       ),
-                    )
-                  : Container(
-                      height: 100,
-                      child: Center(
-                        child: Text(
-                          'Record voice first !',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
                     );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  static loading(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: BlocBuilder<DataCubit, DataState>(
+            builder: (context, state) {
+              return Container(
+                decoration: BoxDecoration(color: Colors.transparent),
+                child: Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              );
             },
           ),
         );
@@ -179,8 +195,6 @@ class SaveRecord {
           contentPadding: EdgeInsets.zero,
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
-              var cubit = DataCubit.get(context);
-
               return Container(
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
@@ -222,8 +236,6 @@ class SaveRecord {
           contentPadding: EdgeInsets.zero,
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
-              var cubit = DataCubit.get(context);
-
               return Container(
                 height: 200,
                 child: Column(

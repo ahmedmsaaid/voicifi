@@ -34,3 +34,7 @@ final class Remove extends DataState {}
 final class Cleared extends DataState {}
 
 final class Downloaded extends DataState {}
+
+final class SavedToCache extends DataState {}
+
+final class GetData extends DataState {}

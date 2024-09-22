@@ -6,8 +6,8 @@ import 'package:lottie/lottie.dart';
 import 'package:voicify/widgets/delete/delete.dart';
 import 'package:voicify/widgets/save_record/save_record.dart';
 
-import '../../../../data/cubits/data_cubit/date_cubit.dart';
-import '../../../../models/colors/app_colors.dart';
+import '../../../data/cubits/data_cubit/date_cubit.dart';
+import '../../../models/colors/app_colors.dart';
 
 class Record extends StatelessWidget {
   const Record({super.key});
@@ -17,11 +17,11 @@ class Record extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Colors.black, // أسود رمادي
-            Color(0xFF6a1b9a), // لون أرجواني داكن
+            const Color(0xFF6a1b9a), // لون أرجواني داكن
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
@@ -29,12 +29,7 @@ class Record extends StatelessWidget {
       ),
       child: ListView(
         children: [
-          ListTile(
-            leading: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 30,
-            ),
+          const ListTile(
             title: Center(
                 child: Text(
               'Input Speech',
@@ -44,17 +39,17 @@ class Record extends StatelessWidget {
               ),
             )),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: h * 0.04),
-            child: Text(
+            child: const Text(
               'Press Microphone Icon To Recording Your ',
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               'Speech',
               style: TextStyle(fontSize: 15, color: Colors.white),
@@ -76,7 +71,7 @@ class Record extends StatelessWidget {
             height: 50.h,
           ),
           _buttons(context),
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
           Center(
@@ -89,7 +84,7 @@ class Record extends StatelessWidget {
                   )),
               child: IconButton(
                 onPressed: () {
-                  Delete.delete(context);
+                  Delete.deleteFromRecord(context);
                 },
                 icon: Icon(
                   Icons.delete_outline_outlined,
@@ -109,7 +104,7 @@ class circule extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color(0xFF5435CF)
+      ..color = const Color(0xFF5435CF)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
     canvas.drawCircle(
@@ -133,10 +128,11 @@ Widget _circle(context) {
         width: 180.w,
         height: 180.h,
         child: CustomPaint(
+          painter: circule(),
           child: Align(
             alignment: Alignment.center,
             child: Visibility(
-                replacement: Row(
+                replacement: const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -155,7 +151,6 @@ Widget _circle(context) {
                     width: 200.w,
                     alignment: Alignment.centerLeft)),
           ),
-          painter: circule(),
         ),
       ),
     ],
@@ -168,12 +163,24 @@ Widget _mic(context) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.skip_previous_outlined,
             size: 50,
             color: Colors.grey,
           ),
           Visibility(
+            replacement: IconButton(
+              onPressed: () {
+                DataCubit.get(context).startListening();
+                DataCubit.get(context).on();
+              },
+              icon: const Icon(
+                Icons.mic,
+                size: 40,
+                color: Color(0xFF5435CF),
+              ),
+            ),
+            visible: DataCubit.get(context).isListening,
             child: IconButton(
               onPressed: () {
                 DataCubit.get(context).stopListening();
@@ -184,18 +191,6 @@ Widget _mic(context) {
                   width: 50,
                   alignment: Alignment.centerLeft),
             ),
-            replacement: IconButton(
-              onPressed: () {
-                DataCubit.get(context).startListening();
-                DataCubit.get(context).on();
-              },
-              icon: Icon(
-                Icons.mic,
-                size: 40,
-                color: Color(0xFF5435CF),
-              ),
-            ),
-            visible: DataCubit.get(context).isListening,
           ),
           // InkWell(
           //   onTap: () {
@@ -209,7 +204,7 @@ Widget _mic(context) {
           //   ),
           // ),
 
-          Icon(
+          const Icon(
             Icons.skip_next_outlined,
             size: 60,
             color: Colors.grey,
@@ -232,7 +227,7 @@ Widget _buttons(context) {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF5435CF),
+                  backgroundColor: const Color(0xFF5435CF),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),
               // height: 40.h,
@@ -242,7 +237,7 @@ Widget _buttons(context) {
               // ,
 
               onPressed: () {
-                SaveRecord.save(
+                SaveRecord.Transcript(
                   context,
                 );
                 DataCubit.get(context).of();
@@ -251,14 +246,15 @@ Widget _buttons(context) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
+                  const Text(
                     'Continue',
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(
                     width: 15.w,
                   ),
-                  Icon(Icons.arrow_circle_right_outlined, color: Colors.white)
+                  const Icon(Icons.arrow_circle_right_outlined,
+                      color: Colors.white)
                 ],
               ),
             ),
@@ -269,10 +265,10 @@ Widget _buttons(context) {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF6a1b9a).withOpacity(.4),
+                  backgroundColor: const Color(0xFF6a1b9a).withOpacity(.4),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: Color(0xFF5435CF)))),
+                      side: const BorderSide(color: Color(0xFF5435CF)))),
 
               // shape: RoundedRectangleBorder(
               //   borderRadius: BorderRadius.circular(12.r),
@@ -282,11 +278,11 @@ Widget _buttons(context) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
+                  const Text(
                     'Lang',
                     style: TextStyle(color: Colors.white),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: SizedBox(),
                   ),
                   Container(
@@ -294,7 +290,7 @@ Widget _buttons(context) {
                       borderRadius: BorderRadius.circular(12),
                       dropdownColor: Colors.transparent.withOpacity(0.4),
                       value: DataCubit.get(context).localeId,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -305,13 +301,13 @@ Widget _buttons(context) {
                       },
                       items: [
                         DropdownMenuItem<String>(
-                          child: Text('عربي'),
                           value: 'ar-EG',
                           onTap: () {},
+                          child: const Text('عربي'),
                         ),
-                        DropdownMenuItem<String>(
-                          child: Text('English'),
+                        const DropdownMenuItem<String>(
                           value: 'en_US',
+                          child: Text('English'),
                         ),
                       ],
                     ),

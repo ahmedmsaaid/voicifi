@@ -14,3 +14,13 @@ final class Refrish extends HomeState {}
 final class Scribe extends HomeState {}
 
 final class EditButton extends HomeState {}
+
+final class Remove extends HomeState {}
+
+final class Removed extends HomeState {}
+
+final class GetData extends HomeState {}
+
+final class SavedToCache extends HomeState {}
+
+final class Saved extends HomeState {}
