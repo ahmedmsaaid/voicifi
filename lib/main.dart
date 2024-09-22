@@ -6,8 +6,6 @@ import 'package:voicify/my_app.dart';
 import 'data/cache/cache_helper.dart';
 
 void main() async {
-  OpenAI.apiKey =
-      "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";
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await SharedHelper.init();
