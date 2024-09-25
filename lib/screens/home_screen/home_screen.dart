@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:voicify/screens/home_screen/settings/settings.dart';
 import 'package:voicify/screens/home_screen/upload/upload.dart';
 
 import '../../data/cubits/home_cubit/home_cubit.dart';
+import '../../translation/locate_keys.g.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -42,25 +44,25 @@ class HomeScreen extends StatelessWidget {
               cubit.navBar(index);
             },
             items: [
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                   icon: Icon(Icons.home),
-                  label: 'Home',
+                  label: LocaleKeys.home.tr(),
                   backgroundColor: Colors.transparent),
-              const BottomNavigationBarItem(
-                  icon: const Icon(Icons.mic),
-                  label: 'Record',
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.mic),
+                  label: LocaleKeys.record.tr(),
                   backgroundColor: Colors.transparent),
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                   icon: Icon(Icons.my_library_music),
-                  label: 'Library',
+                  label: LocaleKeys.library.tr(),
                   backgroundColor: Colors.transparent),
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                   icon: Icon(Icons.upload),
-                  label: 'Upload',
+                  label: LocaleKeys.upload.tr(),
                   backgroundColor: Colors.transparent),
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
-                  label: 'Settings',
+                  label: LocaleKeys.settings.tr(),
                   backgroundColor: Colors.transparent),
             ],
           ),

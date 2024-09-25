@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,7 +14,7 @@ import 'package:path/path.dart' as p;
 import '../../core/api/api_consumer.dart';
 import '../home_cubit/home_cubit.dart';
 
-part 'date_state.dart';
+part 'data_state.dart';
 
 class DataCubit extends Cubit<DataState> {
   DataCubit(
@@ -71,13 +68,13 @@ class DataCubit extends Cubit<DataState> {
           localeId = 'ar-EG';
           dropdownValue = 'English';
         }
-        ;
+        {}
       case 'en_US':
         {
           localeId = 'en_US';
           dropdownValue = 'العربيه';
         }
-        ;
+        {}
     }
     emit(LangChanged());
   }
@@ -100,8 +97,8 @@ class DataCubit extends Cubit<DataState> {
       await speechToText.listen(
         onResult: onSpeechResult,
         localeId: localeId,
-        listenFor: Duration(minutes: 10),
-        pauseFor: Duration(seconds: 5),
+        listenFor: const Duration(minutes: 10),
+        pauseFor: const Duration(seconds: 5),
         listenOptions: options,
       );
 
@@ -120,23 +117,31 @@ class DataCubit extends Cubit<DataState> {
   }
 
   void onSpeechResult(SpeechRecognitionResult result) async {
-    if (speechToText.isListening) {
-      content = result.recognizedWords;
+    emit(LoadingSpeechResult());
+    try {
+      if (speechToText.isListening) {
+        content = result.recognizedWords;
 
-      print(state);
-    } else {
-      of();
-      print(TimeOut());
+        print(state);
+      } else {
+        of();
+        print(TimeOut());
+      }
+
+      ItemModel item =
+          ItemModel(content: content, recordedTime: now, title: '', index: 0);
+      home.addModel(item);
+
+      print("length of items is ${home.items.length}");
+      print('speech********${item.content}');
+      print('date********${item.recordedTime}');
+      print('date********${home.items.last.content}');
+      scribe.text = item.content ?? '';
+
+      emit(SpeechResult());
+    } on Exception catch (e) {
+      print(e.toString());
     }
-
-    ItemModel model =
-        ItemModel(content: content, recordedTime: now, title: '', index: 0);
-    home.items.add(model);
-
-    print("length of items is ${home.items.length}");
-    print('speech********${model.content}');
-    print('date********${model.recordedTime}');
-    emit(SpeechResult());
   }
 
   void on() {

@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voicify/data/core/api/dio_consumer.dart';
 import 'package:voicify/data/cubits/api_cubit/api_cubit.dart';
-import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/auth_cubit/auth_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
 import 'package:voicify/screens/on_boarding/on_boarding.dart';
 
 import 'data/cubits/home_cubit/home_cubit.dart';
@@ -35,6 +36,9 @@ class MyApp extends StatelessWidget {
               create: (context) => ApiCubit(
                 DioConsumer(dio: Dio()),
               ),
+            ),
+            BlocProvider(
+              create: (context) => AuthCubit(),
             ),
           ],
           child: MaterialApp(

@@ -1,9 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:voicify/data/cache/cache_helper.dart';
+import 'package:voicify/data/cubits/auth_cubit/auth_cubit.dart';
+import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/firebase/firebase.dart';
+import 'package:voicify/screens/home_screen/home_screen.dart';
+import 'package:voicify/screens/signIn_screen/signIn_screen.dart';
 
-import '../home_screen/home_screen.dart';
+import '../../translation/locate_keys.g.dart';
+import '../signup_screen/signUp_screen.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -29,7 +36,7 @@ class OnBoardingScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
                           Colors.black, // أسود رمادي
@@ -75,7 +82,7 @@ Widget texts(BuildContext context) {
         height: 25.h,
       ),
       Text(
-        'Voicify',
+        LocaleKeys.appName.tr(),
         style: GoogleFonts.abel(
           textStyle: TextStyle(
             color: Colors.white,
@@ -87,7 +94,7 @@ Widget texts(BuildContext context) {
         height: 15.h,
       ),
       Text(
-        'Your speech to Text Converter',
+        LocaleKeys.onBoardingTitle.tr(),
         style: GoogleFonts.abel(
           textStyle: TextStyle(
             color: Colors.white,
@@ -100,14 +107,16 @@ Widget texts(BuildContext context) {
       ),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Text(
-          'Development of an offline-first mobile snagging application for Disneyland Paris, streamlining information gathering for technical experts in the field and enhancing communication with maintenance services for problem-solving.',
-          overflow: TextOverflow.clip,
-          maxLines: 4,
-          style: GoogleFonts.abel(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 16.sp,
+        child: Center(
+          child: Text(
+            LocaleKeys.onBoardingDescription.tr(),
+            overflow: TextOverflow.clip,
+            // maxLines: 4,
+            style: GoogleFonts.abel(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+              ),
             ),
           ),
         ),
@@ -123,23 +132,30 @@ Widget texts(BuildContext context) {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: Colors.deepPurpleAccent),
-            onPressed: () {
+            onPressed: () async {
+              if (SharedHelper.getData(FirebaseKeys.userId) != null) {
+                await AuthCubit.get(context).getUserFireStore(
+                    SharedHelper.getData(FirebaseKeys.userId));
+              }
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
+                    builder: (context) =>
+                        SharedHelper.getData(FirebaseKeys.userId) == null
+                            ? SignInScreen()
+                            : HomeScreen(),
                   ));
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  'Get Start',
+                  LocaleKeys.getStart.tr(),
                   style: GoogleFonts.abel(
                     textStyle: TextStyle(color: Colors.white, fontSize: 20.sp),
                   ),
                 ),
-                Icon(Icons.arrow_forward_rounded, color: Colors.white)
+                const Icon(Icons.arrow_forward_rounded, color: Colors.white)
               ],
             )),
       )

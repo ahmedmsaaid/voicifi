@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
 import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
+
+import '../../translation/locate_keys.g.dart';
 
 class Delete {
   static done(BuildContext context) {
@@ -27,11 +30,11 @@ class Delete {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        'Done !',
+                        LocaleKeys.done.tr(),
                         style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.check_circle_rounded,
                       color: Colors.blueAccent,
                     ),
@@ -62,7 +65,7 @@ class Delete {
                         height: 50.h,
                         child: Center(
                           child: Text(
-                            'Nothing to delete ! ',
+                            LocaleKeys.nothingToDelete.tr(),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16.sp),
                           ),
@@ -83,7 +86,7 @@ class Delete {
                             child: Padding(
                               padding: EdgeInsets.all(12.0.h),
                               child: Text(
-                                'Are You Shore You Want Delete ? ',
+                                LocaleKeys.areYouShoreYouWantDelete.tr(),
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16.sp),
                               ),
@@ -105,7 +108,7 @@ class Delete {
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(color: Colors.grey)),
                                     child: Text(
-                                      'No',
+                                      LocaleKeys.no.tr(),
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   )),
@@ -121,7 +124,7 @@ class Delete {
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(color: Colors.grey)),
                                     child: Text(
-                                      'Yes',
+                                      LocaleKeys.yes.tr(),
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   )),
@@ -162,7 +165,7 @@ class Delete {
                       child: Padding(
                         padding: EdgeInsets.all(12.0.h),
                         child: Text(
-                          'Are You Shore You Want Delete ? ',
+                          LocaleKeys.areYouShoreYouWantDelete.tr(),
                           style:
                               TextStyle(color: Colors.white, fontSize: 16.sp),
                         ),
@@ -184,7 +187,7 @@ class Delete {
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: Colors.grey)),
                               child: Text(
-                                'No',
+                                LocaleKeys.no.tr(),
                                 style: TextStyle(color: Colors.white),
                               ),
                             )),
@@ -200,7 +203,7 @@ class Delete {
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: Colors.grey)),
                               child: Text(
-                                'Yes',
+                                LocaleKeys.yes.tr(),
                                 style: TextStyle(color: Colors.white),
                               ),
                             )),

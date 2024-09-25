@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
 
 import '../../../models/api_model/transcribed.dart';
 import '../../../models/item_model/item_model.dart';
@@ -123,7 +123,7 @@ class ApiCubit extends Cubit<ApiState> {
     } catch (e) {
       try {
         String err = jsonDecode(e.toString());
-        print("خطأ غير متوقع: ${err}");
+        print("خطأ غير متوقع: $err");
       } catch (jsonError) {
         emit(ErrorUpload(msg: "خطأ في رفع الملف:."));
         print("خطأ في تحليل JSON: ${e.toString()}");
@@ -168,7 +168,7 @@ class ApiCubit extends Cubit<ApiState> {
       content = item.content ?? '';
 
       if (content.isEmpty) {
-        await Future.delayed(Duration(seconds: 5));
+        await Future.delayed(const Duration(seconds: 5));
         await convert();
       } else {
         scribe.text = item.content ?? '';

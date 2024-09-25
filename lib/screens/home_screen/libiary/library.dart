@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,11 +6,12 @@ import 'package:lottie/lottie.dart';
 import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
 import 'package:voicify/models/item_model/item_model.dart';
 
+import '../../../translation/locate_keys.g.dart';
 import '../../../widgets/delete/delete.dart';
 import '../../../widgets/text_box/text_box.dart';
 
 class Library extends StatelessWidget {
-  Library({super.key, required this.height});
+  const Library({super.key, required this.height});
 
   final double height;
 
@@ -26,7 +28,7 @@ class Library extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Colors.black,
-            const Color(0xFF6a1b9a),
+            Color(0xFF6a1b9a),
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
@@ -36,9 +38,9 @@ class Library extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Center(
+          title: Center(
             child: Text(
-              'Library',
+              LocaleKeys.library.tr(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22,
@@ -69,10 +71,10 @@ class Library extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Recent',
+                                      LocaleKeys.recent.tr(),
                                       style: TextStyle(
                                           fontSize: 22, color: Colors.white),
                                     ),
@@ -96,12 +98,13 @@ class Library extends StatelessWidget {
                           );
                         },
                       ),
-                      const SliverToBoxAdapter(
+                      SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Text(
-                            'All records',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            LocaleKeys.allRecords.tr(),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
                           ),
                         ),
                       ),
@@ -153,15 +156,15 @@ Widget _item(
                     Text(
                       model.title ?? '',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    SizedBox(height: 10.w),
                     Text(
                       HomeCubit.get(context).displayTime(model.recordedTime!),
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.grey, fontSize: 11.sp),
                     ),
                   ],
                 ),

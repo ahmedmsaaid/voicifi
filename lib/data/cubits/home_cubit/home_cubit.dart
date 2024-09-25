@@ -17,8 +17,9 @@ class HomeCubit extends Cubit<HomeState> {
   int currentIndex = 0;
   List<ItemModel> savedItems = [];
   bool edit = false;
-
+  bool lang = false;
   List<ItemModel> items = [];
+  String dropdownValue = 'en';
 
   // int listItems = 1;
   List<int> l = [1, 2];
@@ -30,7 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(PageChanged());
   }
-
+ 
   void editButton() {
     edit = !edit;
     emit(EditButton());
@@ -123,6 +124,11 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  void addModel(ItemModel model) {
+    items.add(model);
+    emit(Refrish());
+  }
+
   void remove(int index) {
     emit(Remove());
     savedItems.removeAt(index);
@@ -131,6 +137,13 @@ class HomeCubit extends Cubit<HomeState> {
     }
     saveToCache();
     emit(Removed());
+  }
+
+  void changeLang(String selectedValue) {
+    {
+      dropdownValue = selectedValue;
+      emit(DrobDown());
+    }
   }
 
 // void refresh(int index) {

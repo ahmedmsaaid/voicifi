@@ -1,9 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 // ignore: unused_import
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:voicify/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
+import 'package:voicify/models/colors/app_colors.dart';
+import 'package:voicify/screens/on_boarding/on_boarding.dart';
+import 'package:voicify/translation/locate_keys.g.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -14,7 +19,7 @@ class Home extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Colors.black, // أسود رمادي
@@ -24,90 +29,126 @@ class Home extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      child: ListView(
-        children: [
-          ListTile(
-            trailing: _popUoButton(),
-            leading: CircleAvatar(
-              backgroundImage: Image.network(
-                      'https://img.freepik.com/free-vector/young-bearded-man_24877-82119.jpg')
-                  .image,
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is SuccessSignOut) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OnBoardingScreen(),
+                    ));
+              }
+            },
+            listenWhen: (previous, current) {
+              return current != previous;
+            },
+            child: ListView(
               children: [
-                Text(
-                  'Hi Ahmed',
-                  style: TextStyle(color: Colors.white),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 5.w, vertical: 15.h),
+                  child: ListTile(
+                    trailing: _popUoButton(),
+                    leading: CircleAvatar(
+                      backgroundImage: Image.network(
+                              'https://img.freepik.com/free-vector/young-bearded-man_24877-82119.jpg')
+                          .image,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${LocaleKeys.hi.tr()} ${AuthCubit.get(context).user.name}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        Text(LocaleKeys.welcome.tr(),
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 14.sp)),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  height: 5.h,
+                  height: 10.h,
                 ),
-                Text('Wilcome',
-                    style: TextStyle(color: Colors.grey, fontSize: 14.sp)),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    LocaleKeys.homeTitle.tr(),
+                    style: TextStyle(fontSize: 22.sp),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 8, 8),
+                  child: Text(LocaleKeys.homeHed.tr(),
+                      style: TextStyle(fontSize: 22.sp)),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.0, 8, 8, 0),
+                      child: Text(LocaleKeys.appName.tr(),
+                          style: TextStyle(fontSize: 21.sp)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 8, 8, 0),
+                      child: Text(LocaleKeys.homeDescription1.tr(),
+                          style: TextStyle(fontSize: 16.sp)),
+                    ),
+                  ],
+                ),
+                Descriptions(context),
+                SizedBox(
+                  height: 30.h,
+                ),
+                _circle(),
+                _button(h, w, context),
+                _container(context),
               ],
             ),
           ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Convert speech to text ',
-              style: TextStyle(fontSize: 22.sp),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 8),
-            child: Text('Effortlessly !', style: TextStyle(fontSize: 22.sp)),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
-                child: Text('Voicify', style: TextStyle(fontSize: 21.sp)),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8, 8, 0),
-                child: Text('App is your reliable companion for ',
-                    style: TextStyle(fontSize: 16.sp)),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.0.w, 0, 8.w, 4.h),
-            child: Text('converting spoken words into written text. Using '),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.0.w, 0, 8.w, 4.h),
-            child: Text('advanced speech recognition technology, we'),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.0.w, 0, 8.w, 4.h),
-            child: Text('transcribe your words, ideas, conversations into '),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.0.w, 0, 8.w, 4.h),
-            child: Text(' editable text. Let the words flow!'),
-          ),
-          SizedBox(
-            height: 30.h,
-          ),
-          _circle(),
-          _button(h, w, context),
-          _container(context),
-        ],
+        ),
       ),
     );
   }
+}
+
+Widget enDescriptions(String test) {
+  return Padding(
+    padding: EdgeInsets.fromLTRB(8.0.w, 0, 8.w, 4.h),
+    child: Text(test),
+  );
+}
+
+Widget Descriptions(context) {
+  return HomeCubit.get(context).lang
+      ? Container(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Text(
+              "${LocaleKeys.homeDescription2.tr()}${LocaleKeys.homeDescription3.tr()}${LocaleKeys.homeDescription4.tr()}${LocaleKeys.homeDescription5.tr()} "),
+        )
+      : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            enDescriptions(LocaleKeys.homeDescription2.tr()),
+            enDescriptions(LocaleKeys.homeDescription3.tr()),
+            enDescriptions(LocaleKeys.homeDescription4.tr()),
+            enDescriptions(LocaleKeys.homeDescription5.tr()),
+          ],
+        );
 }
 
 class CirclePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color(0xFF542FB8) // لون الدائرة
+      ..color = const Color(0xFF542FB8) // لون الدائرة
       ..style = PaintingStyle.stroke // نوع الرسم (ملء)
       ..strokeWidth = 4;
 
@@ -128,11 +169,12 @@ Widget _circle() {
   return Stack(
     alignment: Alignment.center,
     children: [
-      Container(
+      SizedBox(
         width: 180.w,
         height: 180.h,
         child: CustomPaint(
-          child: Align(
+          painter: CirclePainter(),
+          child: const Align(
             alignment: Alignment.center,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,7 +197,6 @@ Widget _circle() {
               ],
             ),
           ),
-          painter: CirclePainter(),
         ),
       ),
     ],
@@ -170,7 +211,7 @@ Widget _button(h, w, context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        color: Color(0xFF542FB8),
+        color: const Color(0xFF542FB8),
         onPressed: () {
           HomeCubit.get(context).navBar(1);
         },
@@ -178,13 +219,13 @@ Widget _button(h, w, context) {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              'Start Recording',
+              LocaleKeys.startRecording.tr(),
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold),
             ),
-            Icon(Icons.mic, color: Colors.white),
+            const Icon(Icons.mic, color: Colors.white),
           ],
         )),
   );
@@ -204,22 +245,27 @@ Widget _container(context) {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               width: 3,
-              color: Color(0xFF542FB8),
+              color: const Color(0xFF542FB8),
             )),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              'See How VoiceScribe Works!',
+              LocaleKeys.seeHowVoiceScribeWorks.tr(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
             ),
-            Icon(
-              Icons.arrow_circle_right_sharp,
-              color: Colors.white,
-            )
+            HomeCubit.get(context).lang
+                ? Icon(
+                    Icons.arrow_circle_left,
+                    color: Colors.white,
+                  )
+                : Icon(
+                    Icons.arrow_circle_right,
+                    color: Colors.white,
+                  )
           ],
         ),
       ),
@@ -229,34 +275,54 @@ Widget _container(context) {
 
 Widget _popUoButton() {
   return PopupMenuButton<String>(
-      icon: Icon(
+      color: Colors.transparent.withOpacity(.9),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: AppColors.white,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      icon: const Icon(
         Icons.more_vert_outlined,
         color: Colors.white,
       ),
       itemBuilder: (BuildContext context) {
         return <PopupMenuEntry<String>>[
           PopupMenuItem(
+            value: 'Settinsg',
             child: MaterialButton(
               onPressed: () {
+                Navigator.pop(context);
                 HomeCubit.get(context).navBar(4);
               },
-              child: Text('Settinsg'),
+              child: Text(
+                LocaleKeys.settings.tr(),
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-            value: 'Settinsg',
           ),
           PopupMenuItem(
+            value: 'About Us',
             child: MaterialButton(
               onPressed: () {},
-              child: Text('Abput Us'),
+              child: Text(
+                LocaleKeys.aboutUs.tr(),
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-            value: 'Abput Us',
           ),
           PopupMenuItem(
-            child: MaterialButton(
-              onPressed: () {},
-              child: Text('Log Out'),
-            ),
             value: 'Log Out',
+            child: MaterialButton(
+              onPressed: () {
+                AuthCubit.get(context).signOut();
+              },
+              child: Text(
+                LocaleKeys.signOut.tr(),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
           )
         ];
       });

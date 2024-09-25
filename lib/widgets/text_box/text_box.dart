@@ -1,14 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voicify/data/cubits/api_cubit/api_cubit.dart';
-import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
 import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
 import 'package:voicify/models/item_model/item_model.dart';
 import 'package:voicify/widgets/save_record/save_record.dart';
 
 import '../../models/colors/app_colors.dart';
+import '../../translation/locate_keys.g.dart';
 import '../snack_bar/snack_bar.dart';
 
 class DialogBox {
@@ -20,10 +22,10 @@ class DialogBox {
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               var cubit = HomeCubit.get(context);
-              ItemModel model = cubit.items[0];
+              var data = DataCubit.get(context);
 
-              return model.content != null
-                  ? Container(
+              return data.content.isNotEmpty
+                  ? SizedBox(
                       height: 400.h,
                       child: Column(
                         children: [
@@ -33,11 +35,11 @@ class DialogBox {
                                 Container(
                                   child: cubit.edit
                                       ? TextField(
+                                          maxLength: 10,
                                           controller: DataCubit.get(context)
                                               .titleController,
                                           onTap: () {
                                             DataCubit.get(context).showScribe();
-                                            ;
                                           },
                                           maxLines: null,
                                           decoration: InputDecoration(
@@ -46,8 +48,9 @@ class DialogBox {
                                                   // height: 300,
                                                   color: Colors.black),
                                               // hintText: '',
-                                              labelText:
-                                                  "${DataCubit.get(context).titleController.text}",
+                                              labelText: DataCubit.get(context)
+                                                  .titleController
+                                                  .text,
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -68,16 +71,14 @@ class DialogBox {
                                 SizedBox(
                                   height: 10.h,
                                 ),
-                                Container(
+                                SizedBox(
                                   height: 300,
                                   child: cubit.edit
                                       ? TextField(
-                                          maxLength: 10,
                                           controller:
                                               DataCubit.get(context).scribe,
                                           onTap: () {
                                             DataCubit.get(context).showScribe();
-                                            ;
                                           },
                                           maxLines: null,
                                           decoration: InputDecoration(
@@ -86,8 +87,10 @@ class DialogBox {
                                                   // height: 300,
                                                   color: Colors.black),
                                               // hintText: '',
-                                              labelText: model.content,
-                                              helperText: 'Edit scribe here',
+                                              // labelText: data.content,
+                                              helperText: LocaleKeys
+                                                  .editScribeHere
+                                                  .tr(),
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -98,7 +101,7 @@ class DialogBox {
                                               fontSize: 14),
                                         )
                                       : Text(
-                                          DataCubit.get(context).content,
+                                          DataCubit.get(context).scribe.text,
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),
@@ -158,8 +161,8 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Save',
+                                        Text(
+                                          LocaleKeys.save.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
@@ -189,8 +192,8 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Edit',
+                                        Text(
+                                          LocaleKeys.edit.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
@@ -218,8 +221,8 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Download',
+                                        Text(
+                                          LocaleKeys.download.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
@@ -247,8 +250,8 @@ class DialogBox {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Share',
+                                        Text(
+                                          LocaleKeys.share.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
@@ -261,8 +264,8 @@ class DialogBox {
                         ],
                       ),
                     )
-                  : const Center(
-                      child: Text('Record voice first !'),
+                  : Center(
+                      child: Text(LocaleKeys.recordVoiceFirst.tr()),
                     );
             },
           ),
@@ -281,7 +284,7 @@ class DialogBox {
               var cubit2 = DataCubit.get(context);
               var cubit = HomeCubit.get(context);
 
-              return Container(
+              return SizedBox(
                 height: 420.h,
                 child: Column(
                   children: [
@@ -301,6 +304,7 @@ class DialogBox {
                         height: 10.h,
                       ),
                       Container(
+                        width: 300.w,
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
@@ -367,8 +371,8 @@ class DialogBox {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  const Text(
-                                    'Download',
+                                  Text(
+                                    LocaleKeys.download.tr(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
@@ -397,8 +401,8 @@ class DialogBox {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  const Text(
-                                    'Share',
+                                  Text(
+                                    LocaleKeys.share.tr(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
@@ -432,8 +436,8 @@ class DialogBox {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  const Text(
-                                    'Copy',
+                                  Text(
+                                    LocaleKeys.copy.tr(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
@@ -459,8 +463,8 @@ class DialogBox {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  const Text(
-                                    'Trim',
+                                  Text(
+                                    LocaleKeys.trim.tr(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),

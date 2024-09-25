@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "299206152585",
+    "project_id": "voicify-435015",
+    "storage_bucket": "voicify-435015.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299206152585:android:6746fd49e06f527be01158",
+        "android_client_info": {
+          "package_name": "com.example.voicify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299206152585-hhpka6u8agef8lnl6hq6btqoequtm7ms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.voicify",
+            "certificate_hash": "aecb231f8aa5485f8cb875efab7ad0fd072a5f2c"
+          }
+        },
+        {
+          "client_id": "299206152585-q0f6dfgdposbem9fqfrhdps4hpg0oab6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC981TNAF8zx0pnuQNia7nKZBIFHuxlfcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299206152585-q0f6dfgdposbem9fqfrhdps4hpg0oab6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "299206152585-fmek0l3nj79per0k0kr962fapl33t8bq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.voicify"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

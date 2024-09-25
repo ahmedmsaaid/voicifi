@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
@@ -7,6 +7,7 @@ import 'package:voicify/data/cubits/home_cubit/home_cubit.dart';
 
 import '../../data/cubits/api_cubit/api_cubit.dart';
 import '../../models/colors/app_colors.dart';
+import '../../translation/locate_keys.g.dart';
 import '../save_record/save_record.dart';
 
 class UploadWidgets {
@@ -140,7 +141,7 @@ class UploadWidgets {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Convert',
+                                    LocaleKeys.convert.tr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -216,7 +217,7 @@ class UploadWidgets {
                                           decoration: InputDecoration(
                                             hintStyle: const TextStyle(
                                                 color: Colors.black),
-                                            labelText: "Title",
+                                            labelText: LocaleKeys.title.tr(),
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -243,8 +244,10 @@ class UploadWidgets {
                                             decoration: InputDecoration(
                                               hintStyle: const TextStyle(
                                                   color: Colors.black),
-                                              labelText: "Content",
-                                              helperText: 'Edit scribe here',
+                                              labelText: LocaleKeys.go.tr(),
+                                              helperText: LocaleKeys
+                                                  .editScribeHere
+                                                  .tr(),
                                               border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12),
@@ -323,7 +326,7 @@ class UploadWidgets {
                                         ),
                                       ),
                                       SizedBox(height: 5.h),
-                                      const Text('Save',
+                                      Text(LocaleKeys.save.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)),
@@ -351,7 +354,7 @@ class UploadWidgets {
                                         ),
                                       ),
                                       SizedBox(height: 5.h),
-                                      const Text('Edit',
+                                      Text(LocaleKeys.edit.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)),
@@ -380,8 +383,8 @@ class UploadWidgets {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Download',
+                                        Text(
+                                          LocaleKeys.download.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
@@ -410,8 +413,8 @@ class UploadWidgets {
                                         SizedBox(
                                           height: 5.h,
                                         ),
-                                        const Text(
-                                          'Share',
+                                        Text(
+                                          LocaleKeys.share.tr(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),

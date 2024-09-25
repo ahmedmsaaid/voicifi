@@ -1,12 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:voicify/data/cubits/data_cubit/date_cubit.dart';
+import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
 import 'package:voicify/models/colors/app_colors.dart';
 
 import '../../data/cubits/home_cubit/home_cubit.dart';
+import '../../translation/locate_keys.g.dart';
 import '../text_box/text_box.dart';
 
 class SaveRecord {
@@ -20,23 +22,24 @@ class SaveRecord {
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
               var cubit = DataCubit.get(context);
+              var home = HomeCubit.get(context);
 
-              return HomeCubit.get(context).items.isEmpty
-                  ? Container(
+              return cubit.content.isEmpty
+                  ? SizedBox(
                       height: 100,
                       child: Center(
                         child: Text(
-                          'Record voice first !',
+                          LocaleKeys.recordVoiceFirst.tr(),
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
                     )
-                  : Container(
+                  : SizedBox(
                       height: 100.h,
                       child: Column(
                         children: [
                           Text(
-                            'File Title',
+                            LocaleKeys.fileTitle.tr(),
                             style: TextStyle(
                               color: Colors.black,
                             ),
@@ -45,7 +48,7 @@ class SaveRecord {
                             child: TextField(
                               controller:
                                   DataCubit.get(context).titleController,
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                           SizedBox(
@@ -72,7 +75,7 @@ class SaveRecord {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
-                                  'Transcribe',
+                                  LocaleKeys.transcribe.tr(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -96,7 +99,7 @@ class SaveRecord {
                                     onAnimationEnd: () {
                                       DataCubit.get(context).transcribing();
                                     },
-                                    barRadius: Radius.circular(12),
+                                    barRadius: const Radius.circular(12),
                                     animation: true,
                                     lineHeight: 50,
                                     percent: 1,
@@ -115,7 +118,7 @@ class SaveRecord {
                                   ),
                                   child: cubit.is_done == false
                                       ? Text(
-                                          'Transcribing Audio',
+                                          LocaleKeys.transcribingAudio.tr(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
@@ -135,7 +138,7 @@ class SaveRecord {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Done',
+                                                LocaleKeys.done.tr(),
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   color: Colors.white,
@@ -145,7 +148,7 @@ class SaveRecord {
                                               SizedBox(
                                                 width: 10.w,
                                               ),
-                                              Icon(
+                                              const Icon(
                                                 Icons.check_circle_rounded,
                                                 color: Colors.white,
                                               )
@@ -175,8 +178,8 @@ class SaveRecord {
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
               return Container(
-                decoration: BoxDecoration(color: Colors.transparent),
-                child: Center(
+                decoration: const BoxDecoration(color: Colors.transparent),
+                child: const Center(
                   child: CircularProgressIndicator.adaptive(),
                 ),
               );
@@ -205,7 +208,7 @@ class SaveRecord {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Saving',
+                      LocaleKeys.saving.tr(),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.sp,
@@ -236,26 +239,28 @@ class SaveRecord {
           contentPadding: EdgeInsets.zero,
           content: BlocBuilder<DataCubit, DataState>(
             builder: (context, state) {
-              return Container(
+              return SizedBox(
                 height: 200,
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        'Done !',
+                        LocaleKeys.done.tr(),
                         style: TextStyle(color: Colors.black, fontSize: 18.sp),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.check_circle_rounded,
                       color: Colors.blueAccent,
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                      padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                       child: Center(
                         child: Text(
-                          'Your Transcribed file hase been saved to your libiary ',
+                          LocaleKeys
+                              .yourTranscribedFileHasBeenSavedToYourLibrary
+                              .tr(),
                           style:
                               TextStyle(color: Colors.black, fontSize: 16.sp),
                         ),
@@ -269,7 +274,7 @@ class SaveRecord {
                           HomeCubit.get(context).navBar(2);
                         },
                         child: Text(
-                          'View Libiary',
+                          LocaleKeys.viewLibrary.tr(),
                           style: TextStyle(color: Colors.white),
                         ))
                   ],

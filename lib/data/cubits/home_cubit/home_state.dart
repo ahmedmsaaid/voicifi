@@ -11,6 +11,8 @@ final class ExpandSliverBar extends HomeState {}
 
 final class Refrish extends HomeState {}
 
+final class DrobDown extends HomeState {}
+
 final class Scribe extends HomeState {}
 
 final class EditButton extends HomeState {}

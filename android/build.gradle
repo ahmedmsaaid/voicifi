@@ -3,7 +3,6 @@ allprojects {
         google()
         mavenCentral()
     }
-  
 }
 
 rootProject.buildDir = "../build"

@@ -1,4 +1,4 @@
-part of 'date_cubit.dart';
+part of 'data_cubit.dart';
 
 @immutable
 sealed class DataState {}
@@ -16,6 +16,8 @@ final class StartListening extends DataState {}
 final class StopListening extends DataState {}
 
 final class SpeechResult extends DataState {}
+
+final class LoadingSpeechResult extends DataState {}
 
 final class TimeOut extends DataState {}
 

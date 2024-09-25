@@ -1,8 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voicify/data/cubits/api_cubit/api_cubit.dart';
+import 'package:voicify/my_app.dart';
 import 'package:voicify/widgets/upload/upload_widgets.dart';
 
+import '../../../translation/locate_keys.g.dart';
 import '../../../widgets/save_record/save_record.dart';
 
 class Upload extends StatelessWidget {
@@ -13,7 +17,7 @@ class Upload extends StatelessWidget {
     return BlocBuilder<ApiCubit, ApiState>(
       builder: (context, state) {
         return Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Colors.black, // أسود رمادي
@@ -31,7 +35,7 @@ class Upload extends StatelessWidget {
                   onTap: () {
                     ApiCubit.get(context).pickAudioFile();
                     SaveRecord.loading(context);
-                    Future.delayed(Duration(seconds: 5)).then((_) async {
+                    Future.delayed(const Duration(seconds: 5)).then((_) async {
                       Navigator.pop(context);
 
                       UploadWidgets.pickFile(
@@ -46,13 +50,13 @@ class Upload extends StatelessWidget {
                     width: 200,
                     height: 200,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [Colors.blue, Colors.purple],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           blurRadius: 10,
@@ -64,23 +68,24 @@ class Upload extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.cloud_upload,
-                          size: 80,
+                          size: 60,
                           color: Colors.white,
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10.h),
                         Text(
-                          'Upload',
+                          LocaleKeys.upload.tr(),
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         Text(
-                          'Upload your Audio To  convert it to text ',
+                          LocaleKeys.uploadDescription.tr(),
                           style: TextStyle(
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white70,
                           ),
                           textAlign: TextAlign.center,
@@ -90,7 +95,7 @@ class Upload extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               // Center(

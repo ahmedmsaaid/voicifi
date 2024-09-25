@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:voicify/widgets/delete/delete.dart';
 import 'package:voicify/widgets/save_record/save_record.dart';
 
-import '../../../data/cubits/data_cubit/date_cubit.dart';
+import '../../../data/cubits/data_cubit/data_cubit.dart';
 import '../../../models/colors/app_colors.dart';
+import '../../../translation/locate_keys.g.dart';
 
 class Record extends StatelessWidget {
   const Record({super.key});
@@ -21,80 +22,87 @@ class Record extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Colors.black, // أسود رمادي
-            const Color(0xFF6a1b9a), // لون أرجواني داكن
+            Color(0xFF6a1b9a), // لون أرجواني داكن
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         ),
       ),
-      child: ListView(
-        children: [
-          const ListTile(
-            title: Center(
-                child: Text(
-              'Input Speech',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: ListView(
+            children: [
+              ListTile(
+                title: Center(
+                    child: Text(
+                  LocaleKeys.inputSpeech.tr(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+                )),
               ),
-            )),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: h * 0.04),
-            child: const Text(
-              'Press Microphone Icon To Recording Your ',
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
-          ),
-          const Center(
-            child: Text(
-              'Speech',
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
-          ),
-          SizedBox(
-            height: 25.h,
-          ),
-          BlocBuilder<DataCubit, DataState>(
-            builder: (context, state) {
-              return _circle(context);
-            },
-          ),
-          SizedBox(
-            height: 50.h,
-          ),
-          _mic(context),
-          SizedBox(
-            height: 50.h,
-          ),
-          _buttons(context),
-          const SizedBox(
-            height: 50,
-          ),
-          Center(
-            child: Container(
-              padding: EdgeInsets.all(8.r),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: AppColors.purple,
-                  )),
-              child: IconButton(
-                onPressed: () {
-                  Delete.deleteFromRecord(context);
-                },
-                icon: Icon(
-                  Icons.delete_outline_outlined,
-                  size: 30.r,
-                  color: Colors.red,
+              const SizedBox(
+                height: 25,
+              ),
+              Center(
+                child: Text(
+                  LocaleKeys.pressMicrophoneLine1.tr(),
+                  style: TextStyle(fontSize: 15.sp, color: Colors.white),
                 ),
               ),
-            ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Center(
+                child: Text(
+                  LocaleKeys.pressMicrophoneLine2.tr(),
+                  style: TextStyle(fontSize: 15.sp, color: Colors.white),
+                ),
+              ),
+              SizedBox(
+                height: 25.h,
+              ),
+              BlocBuilder<DataCubit, DataState>(
+                builder: (context, state) {
+                  return _circle(context);
+                },
+              ),
+              SizedBox(
+                height: 50.h,
+              ),
+              _mic(context),
+              SizedBox(
+                height: 50.h,
+              ),
+              _buttons(context),
+              const SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.purple,
+                      )),
+                  child: IconButton(
+                    onPressed: () {
+                      Delete.deleteFromRecord(context);
+                    },
+                    icon: Icon(
+                      Icons.delete_outline_outlined,
+                      size: 30.r,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -124,7 +132,7 @@ Widget _circle(context) {
   return Stack(
     alignment: Alignment.center,
     children: [
-      Container(
+      SizedBox(
         width: 180.w,
         height: 180.h,
         child: CustomPaint(
@@ -246,8 +254,8 @@ Widget _buttons(context) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text(
-                    'Continue',
+                  Text(
+                    LocaleKeys.go.tr(),
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(
@@ -278,8 +286,8 @@ Widget _buttons(context) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text(
-                    'Lang',
+                  Text(
+                    LocaleKeys.lang.tr(),
                     style: TextStyle(color: Colors.white),
                   ),
                   const Expanded(
