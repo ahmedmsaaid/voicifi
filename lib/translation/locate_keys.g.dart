@@ -71,5 +71,8 @@ abstract class  LocaleKeys {
   static const record = 'record';
   static const arabic = 'arabic';
   static const english = 'english';
+  static const convertingToMb3 = 'convertingToMb3';
+  static const fileBeingProcessed = 'fileBeingProcessed';
+  static const almostFinished = 'almostFinished';
 
 }

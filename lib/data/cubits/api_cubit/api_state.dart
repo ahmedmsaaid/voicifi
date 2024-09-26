@@ -54,3 +54,13 @@ final class Save extends ApiState {}
 final class SavedToCache extends ApiState {}
 
 final class Refresh extends ApiState {}
+
+final class LoadingConvertToMp3 extends ApiState {}
+
+final class SuccessConvertToMp3 extends ApiState {}
+
+final class FailedConvertToMp3 extends ApiState {
+  final String msg;
+
+  FailedConvertToMp3({required this.msg});
+}

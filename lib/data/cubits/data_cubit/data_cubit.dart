@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ffmpeg_kit_flutter_audio/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -142,6 +143,14 @@ class DataCubit extends Cubit<DataState> {
     } on Exception catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<String> convertToMp3(inputPath) async {
+    String outputPath = "path/to/your/output/file.mp3";
+
+    await FFmpegKit.execute(
+        "-i $inputPath -codec:a libmp3lame -qscale:a 2 $outputPath");
+    return outputPath;
   }
 
   void on() {

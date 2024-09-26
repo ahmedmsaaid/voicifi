@@ -11,6 +11,27 @@ import '../../translation/locate_keys.g.dart';
 import '../save_record/save_record.dart';
 
 class UploadWidgets {
+  static loading(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: BlocBuilder<ApiCubit, ApiState>(
+            builder: (context, state) {
+              return Container(
+                decoration: const BoxDecoration(color: Colors.transparent),
+                child: const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   static pickFile(BuildContext context) {
     ApiCubit cubit = ApiCubit.get(context);
 
@@ -23,68 +44,97 @@ class UploadWidgets {
         return AlertDialog(
           content: BlocBuilder<ApiCubit, ApiState>(
             builder: (context, state) {
-              return SizedBox(
-                height: 100.h,
-                child: Column(
-                  children: [
-                    const Text(
-                      'File Title',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: cubit.titleController,
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        // يمكنك إضافة بعض الخصائص هنا إذا كنت ترغب
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Container(
-                      width: 230.w,
-                      height: 50,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 30.w),
+              return state is LoadingConvertToMp3
+                  ? Container(
+                      padding: EdgeInsets.zero,
                       decoration: BoxDecoration(
-                        color: AppColors.purple,
-                        borderRadius: BorderRadius.circular(12),
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12)),
+                      height: 50.h,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            LocaleKeys.convertingToMb3.tr(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.sp,
+                            ),
+                          ),
+                          ClipRRect(
+                            clipBehavior: Clip.none,
+                            child: Lottie.asset(
+                              'assets/lotte_files/saving.json',
+                              height: 100.h,
+                            ),
+                          )
+                        ],
                       ),
-                      child: MaterialButton(
-                        onPressed: () {
-                          cubit.UploadToApi(cubit.data);
-                          Navigator.pop(context);
-                          upload(context, state);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    )
+                  : Container(
+                      child: SizedBox(
+                        height: 100.h,
+                        child: Column(
                           children: [
-                            Text(
-                              'Next',
-                              textAlign: TextAlign.center,
+                            const Text(
+                              'File Title',
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.sp,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller: cubit.titleController,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                // يمكنك إضافة بعض الخصائص هنا إذا كنت ترغب
                               ),
                             ),
                             SizedBox(
-                              width: 10.w,
+                              height: 10.h,
                             ),
-                            const Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Colors.white,
+                            Container(
+                              width: 230.w,
+                              height: 50,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.h, horizontal: 30.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.purple,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  cubit.UploadToApi(cubit.data);
+                                  Navigator.pop(context);
+                                  upload(context, state);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Next',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.sp,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
+                    );
             },
           ),
         );
@@ -103,11 +153,21 @@ class UploadWidgets {
               var cubit = ApiCubit.get(context);
 
               return state is LoadingUpload
-                  ? Center(
-                      child: SizedBox(
-                        height: 100.h,
-                        child: Lottie.asset(
-                          'assets/lotte_files/uploading.json.json',
+                  ? Container(
+                      width: 350.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.transparent,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/lotte_files/uploading.json.json',
+                            ),
+                            Text(LocaleKeys.fileBeingProcessed.tr()),
+                          ],
                         ),
                       ),
                     )
@@ -188,8 +248,15 @@ class UploadWidgets {
                       decoration: BoxDecoration(
                         color: AppColors.transparent,
                       ),
-                      child: Lottie.asset(
-                        'assets/lotte_files/processing.json',
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Lottie.asset(
+                              'assets/lotte_files/processing.json',
+                            ),
+                            Text(LocaleKeys.almostFinished.tr()),
+                          ],
+                        ),
                       ),
                     )
                   : Container(

@@ -68,5 +68,8 @@
   "home": "الصفحه الرئيسيه",
   "record": "تسجيل",
   "arabic": "ألعربيه",
-  "english": "English"
+  "english": "English",
+  "convertingToMb3": "جار التحويل الي Mb3",
+  "fileBeingProcessed": "جاري معالجة الملف",
+  "almostFinished": "اوشكت علي الانتهاء"
 }

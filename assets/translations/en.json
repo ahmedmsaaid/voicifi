@@ -68,5 +68,8 @@
   "home": "Home",
   "record": "Record",
   "arabic": "ألعربيه",
-  "english": "English"
+  "english": "English",
+  "convertingToMb3": "converting To Mb3",
+  "fileBeingProcessed": "The File   Being Processed",
+  "almostFinished": "Moments and the conversion is done"
 }

@@ -17,6 +17,13 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (context.locale.toString() == "en") {
+      HomeCubit.get(context).lang = false;
+      HomeCubit.get(context).dropdownValue = "en";
+    } else {
+      HomeCubit.get(context).lang = true;
+      HomeCubit.get(context).dropdownValue = "ar";
+    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -36,7 +43,10 @@ class OnBoardingScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
+                      // borderRadius: BorderRadius.only(
+                      //     topLeft: Radius.circular(100.r),
+                      //     topRight: Radius.circular(100.r)),
                       gradient: LinearGradient(
                         colors: [
                           Colors.black, // أسود رمادي
@@ -49,7 +59,7 @@ class OnBoardingScreen extends StatelessWidget {
                     child: texts(context), // تأكد من أن هذه الدالة موجودة
                   ),
                   Positioned(
-                    top: -1,
+                    top: -3.h,
                     child: ClipPath(
                       clipper: ContanerWithCircle(),
                       // تأكد من أن هذا الكلاسر موجود
@@ -122,7 +132,7 @@ Widget texts(BuildContext context) {
         ),
       ),
       SizedBox(
-        height: 60.h,
+        height: 35.h,
       ),
       SizedBox(
         width: 220.w,
@@ -130,7 +140,7 @@ Widget texts(BuildContext context) {
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12.r)),
                 backgroundColor: Colors.deepPurpleAccent),
             onPressed: () async {
               if (SharedHelper.getData(FirebaseKeys.userId) != null) {

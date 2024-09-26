@@ -2,17 +2,16 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voicify/data/core/api/end_points.dart';
 import 'package:voicify/my_app.dart';
 import 'data/cache/cache_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'data/keys/keys.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  OpenAI.apiKey = Keys.openAi;
+  OpenAI.apiKey = "";
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
   await SharedHelper.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

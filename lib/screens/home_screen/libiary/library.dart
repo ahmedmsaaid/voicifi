@@ -43,7 +43,7 @@ class Library extends StatelessWidget {
               LocaleKeys.library.tr(),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: 22.sp,
               ),
             ),
           ),
@@ -64,7 +64,7 @@ class Library extends StatelessWidget {
                           return SliverAppBar(
                             backgroundColor: Colors.transparent,
                             automaticallyImplyLeading: false,
-                            expandedHeight: 110.0.h,
+                            expandedHeight: 120.0.h,
                             floating: false,
                             flexibleSpace: FlexibleSpaceBar(
                               background: Column(
@@ -72,7 +72,7 @@ class Library extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0.r),
                                     child: Text(
                                       LocaleKeys.recent.tr(),
                                       style: TextStyle(
@@ -89,7 +89,7 @@ class Library extends StatelessWidget {
                                       },
                                       itemCount: 1,
                                       separatorBuilder: (context, index) =>
-                                          const SizedBox(height: 10),
+                                          SizedBox(height: 10.h),
                                     ),
                                   ),
                                 ],
@@ -134,14 +134,14 @@ Widget _item(
     required int index}) {
   return Material(
     color: Colors.transparent,
-    borderRadius: BorderRadius.circular(12),
+    borderRadius: BorderRadius.circular(12.r),
     child: InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12.r),
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0.r),
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFF6a1b9a)),
             borderRadius: BorderRadius.circular(12),

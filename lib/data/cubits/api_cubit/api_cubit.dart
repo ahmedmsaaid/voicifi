@@ -3,11 +3,14 @@ import 'dart:io';
 
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
+import 'package:ffmpeg_kit_flutter_audio/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_audio/return_code.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:voicify/data/cubits/data_cubit/data_cubit.dart';
-
+import 'package:path/path.dart' as p;
 import '../../../models/api_model/transcribed.dart';
 import '../../../models/item_model/item_model.dart';
 import '../../../models/upload/save_url.dart';
@@ -61,42 +64,65 @@ class ApiCubit extends Cubit<ApiState> {
   // }
 
   Future<void> pickAudioFile() async {
-    emit(LoadingPicFile());
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.audio,
       );
 
       if (result != null && result.files.isNotEmpty) {
-        String path = result.files.single.path!;
-        File file = File(path);
-        String fileName = file.path.split('/').last;
+        File file = File(result.files.single.path!);
+        String fileName = p.basename(file.path);
 
-        if (fileName.endsWith('.mp3') || fileName.endsWith('.wav')) {
-          FormData data = FormData.fromMap({
-            "file": await MultipartFile.fromFile(
-              file.path,
-              filename: fileName,
-            ),
-          });
-          this.data = data;
-
-          print("***********//////////*/******");
-          this.fileName = fileName;
-          titleController.text = fileName;
-          print(fileName);
-          emit(SuccessPicFile());
+        if (p.extension(fileName).toLowerCase() == '.mp3') {
+          await _processAudioFile(file, fileName);
         } else {
-          emit(ErrorPicFile(msg: "الملف المختار ليس ملف صوتي صالح."));
-          print("الملف المختار ليس ملف صوتي صالح.");
+          await _convertAndProcessAudioFile(file, fileName);
         }
       } else {
-        emit(ErrorPicFile(msg: "لم يتم اختيار أي ملف."));
-        print("لم يتم اختيار أي ملف.");
+        throw Exception("لم يتم اختيار أي ملف.");
       }
-    } on Exception catch (e) {
-      emit(ErrorPicFile(msg: "خطأ في اختيار ملف الصوت: ${e.toString()}"));
-      print("خطأ في اختيار ملف الصوت: ${e.toString()}");
+    } catch (e) {
+      throw Exception("خطأ في اختيار ملف الصوت: ${e.toString()}");
+    }
+  }
+
+  Future<void> _processAudioFile(File file, String fileName) async {
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+      ),
+    });
+    data = formData;
+    this.fileName = fileName;
+    titleController.text = fileName;
+    print("تم معالجة الملف: $fileName");
+  }
+
+  Future<void> _convertAndProcessAudioFile(File file, String fileName) async {
+    emit(LoadingConvertToMp3());
+    try {
+      String convertedPath = await _convertToMp3(file.path);
+      await _processAudioFile(File(convertedPath), p.basename(convertedPath));
+      emit(SuccessConvertToMp3());
+    } catch (e) {
+      emit(FailedConvertToMp3(msg: e.toString()));
+      throw Exception("فشل تحويل الملف إلى MP3: $e");
+    }
+  }
+
+  Future<String> _convertToMp3(String inputFilePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final outputFileName = '${p.basenameWithoutExtension(inputFilePath)}.mp3';
+    final outputFilePath = p.join(directory.path, outputFileName);
+
+    try {
+      await FFmpegKit.execute(
+          '-i "$inputFilePath" -acodec libmp3lame "$outputFilePath"');
+      return outputFilePath;
+    } catch (e) {
+      print("خطأ أثناء تحويل الملف: $e");
+      throw Exception("فشل تحويل الملف إلى MP3");
     }
   }
 

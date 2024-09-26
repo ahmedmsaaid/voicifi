@@ -78,26 +78,26 @@ class Home extends StatelessWidget {
                   height: 10.h,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
                   child: Text(
                     LocaleKeys.homeTitle.tr(),
                     style: TextStyle(fontSize: 22.sp),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 8, 8),
+                  padding: EdgeInsets.fromLTRB(8.0.w, 0.h, 8.w, 8.h),
                   child: Text(LocaleKeys.homeHed.tr(),
                       style: TextStyle(fontSize: 22.sp)),
                 ),
                 Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(8.0, 8, 8, 0),
+                      padding: EdgeInsets.fromLTRB(8.0.w, 0.h, 8.w, 8.h),
                       child: Text(LocaleKeys.appName.tr(),
                           style: TextStyle(fontSize: 21.sp)),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 8, 8, 0),
+                      padding: EdgeInsets.fromLTRB(0.w, 8.h, 8.w, 0.h),
                       child: Text(LocaleKeys.homeDescription1.tr(),
                           style: TextStyle(fontSize: 16.sp)),
                     ),
@@ -107,7 +107,7 @@ class Home extends StatelessWidget {
                 SizedBox(
                   height: 30.h,
                 ),
-                _circle(),
+                Center(child: _circle()),
                 _button(h, w, context),
                 _container(context),
               ],
@@ -129,9 +129,11 @@ Widget enDescriptions(String test) {
 Widget Descriptions(context) {
   return HomeCubit.get(context).lang
       ? Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
-              "${LocaleKeys.homeDescription2.tr()}${LocaleKeys.homeDescription3.tr()}${LocaleKeys.homeDescription4.tr()}${LocaleKeys.homeDescription5.tr()} "),
+            "${LocaleKeys.homeDescription2.tr()}${LocaleKeys.homeDescription3.tr()}${LocaleKeys.homeDescription4.tr()}${LocaleKeys.homeDescription5.tr()} ",
+            style: TextStyle(fontSize: 14.sp),
+          ),
         )
       : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,46 +168,48 @@ class CirclePainter extends CustomPainter {
 }
 
 Widget _circle() {
-  return Stack(
-    alignment: Alignment.center,
-    children: [
-      SizedBox(
-        width: 180.w,
-        height: 180.h,
-        child: CustomPaint(
+  return SizedBox(
+    width: 180.w,
+    height: 180.h,
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        CustomPaint(
           painter: CirclePainter(),
-          child: const Align(
+          child: Align(
             alignment: Alignment.center,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.multitrack_audio_sharp,
-                    size: 25, color: Color(0xFF542FB8)),
-                Icon(Icons.multitrack_audio_sharp,
-                    size: 25, color: Color(0xFF542FB8)),
-                Icon(
-                  Icons.multitrack_audio_sharp,
-                  size: 30,
-                  color: Color(0xFF542FB8),
-                ),
-                Icon(
-                  Icons.multitrack_audio_sharp,
-                  size: 25,
-                  color: Color(0xFF542FB8),
-                ),
-              ],
+            child: Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(Icons.multitrack_audio_sharp,
+                      size: 25.r, color: Color(0xFF542FB8)),
+                  Icon(Icons.multitrack_audio_sharp,
+                      size: 25.r, color: Color(0xFF542FB8)),
+                  Icon(
+                    Icons.multitrack_audio_sharp,
+                    size: 30.r,
+                    color: Color(0xFF542FB8),
+                  ),
+                  Icon(
+                    Icons.multitrack_audio_sharp,
+                    size: 25.r,
+                    color: Color(0xFF542FB8),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
 
 Widget _button(h, w, context) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: w * .25, vertical: 20.h),
+    padding: EdgeInsets.symmetric(horizontal: w * .20.w, vertical: 20.h),
     child: MaterialButton(
         height: 40.h,
         shape: RoundedRectangleBorder(
@@ -225,7 +229,11 @@ Widget _button(h, w, context) {
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold),
             ),
-            const Icon(Icons.mic, color: Colors.white),
+            Icon(
+              Icons.mic,
+              color: Colors.white,
+              size: 15.r,
+            ),
           ],
         )),
   );
@@ -233,18 +241,18 @@ Widget _button(h, w, context) {
 
 Widget _container(context) {
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: EdgeInsets.all(8.0.r),
     child: InkWell(
       onTap: () {
         HomeCubit.get(context).navBar(1);
       },
       child: Container(
-        height: 50,
+        height: 50.h,
         width: double.infinity,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              width: 3,
+              width: 3.w,
               color: const Color(0xFF542FB8),
             )),
         child: Row(

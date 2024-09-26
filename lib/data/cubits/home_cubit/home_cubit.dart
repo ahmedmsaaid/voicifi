@@ -17,7 +17,8 @@ class HomeCubit extends Cubit<HomeState> {
   int currentIndex = 0;
   List<ItemModel> savedItems = [];
   bool edit = false;
-  bool lang = false;
+  late bool lang;
+
   List<ItemModel> items = [];
   String dropdownValue = 'en';
 
@@ -31,7 +32,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(PageChanged());
   }
- 
+
   void editButton() {
     edit = !edit;
     emit(EditButton());
